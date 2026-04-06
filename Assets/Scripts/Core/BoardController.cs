@@ -31,6 +31,8 @@ namespace Matchmancer.Core
         private Scoring _scoring;
         private ObjectiveChecker _objectiveChecker;
 
+        private BossMechanic _bossMechanic; // null for non-boss levels
+        private int _turnCount;
         private System.Random _rng;
         private bool _isTurnInProgress;
 
@@ -46,6 +48,7 @@ namespace Matchmancer.Core
         public event Action<int> OnMeterChanged;
         public event Action<DiceRollResult> OnDiceRolled;
         public event Action<List<GridPosition>> OnDiceEffectApplied;
+        public event Action<List<GridPosition>> OnBossStonesSpawned;
         public event Action<int> OnMoveDeducted;
         public event Action<LevelResult, int> OnLevelComplete; // result + stars
 
@@ -81,6 +84,17 @@ namespace Matchmancer.Core
             foreach (var stone in config.StoneBlocks)
             {
                 _stoneBlockSystem.PlaceStone(stone.Row, stone.Col, stone.HP);
+            }
+
+            // Boss mechanic for Level 10 (Survive objective with stones)
+            _turnCount = 0;
+            if (config.Objective.Type == Objectives.ObjectiveType.Survive && config.StoneBlocks.Count > 0)
+            {
+                _bossMechanic = new BossMechanic(_board, _stoneBlockSystem, spreadInterval: 3, spreadHP: 1);
+            }
+            else
+            {
+                _bossMechanic = null;
             }
 
             // Clear any pre-existing matches so the board starts stable
@@ -158,6 +172,19 @@ namespace Matchmancer.Core
 
             // Step 4: Check win/lose
             _objectiveChecker.IncrementTurn();
+            _turnCount++;
+
+            // Boss mechanic: spread stones every N turns
+            if (_bossMechanic != null)
+            {
+                var newStones = _bossMechanic.OnTurnEnd(_turnCount);
+                if (newStones.Count > 0)
+                {
+                    OnBossStonesSpawned?.Invoke(newStones);
+                    yield return new WaitForSeconds(0.3f);
+                }
+            }
+
             var result = _objectiveChecker.Evaluate();
 
             if (result != LevelResult.InProgress)

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using Matchmancer.Core;
 using Matchmancer.Objectives;
 
@@ -11,11 +11,11 @@ namespace Matchmancer.View
     /// </summary>
     public class HUDView : MonoBehaviour
     {
-        [SerializeField] private Text _scoreText;
-        [SerializeField] private Text _movesText;
-        [SerializeField] private Image _meterFill;
-        [SerializeField] private Text _meterText;
-        [SerializeField] private Text _objectiveText;
+        [SerializeField] private TextMeshProUGUI _scoreText;
+        [SerializeField] private TextMeshProUGUI _movesText;
+        [SerializeField] private UnityEngine.UI.Image _meterFill;
+        [SerializeField] private TextMeshProUGUI _meterText;
+        [SerializeField] private TextMeshProUGUI _objectiveText;
 
         private BoardController _controller;
 
