@@ -238,6 +238,7 @@ namespace Matchmancer.Achievements
             }
         }
 
+        [Serializable]
         public class Snapshot
         {
             public AchievementStatKey[] StatKeys;

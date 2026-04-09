@@ -197,6 +197,7 @@ namespace Matchmancer.Achievements
                 _equippedId = snapshot.EquippedId;
         }
 
+        [Serializable]
         public class Snapshot
         {
             public string[] OwnedIds;
