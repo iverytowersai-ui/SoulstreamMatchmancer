@@ -26,6 +26,7 @@ namespace Matchmancer.Character
     public class CharacterRuntime
     {
         private readonly CharacterTuning _tuning;
+        private GearStatModifiers _gearMods; // summed bonuses from equipped gear
 
         // ------------------------------------------------------------------
         // Identity
@@ -100,18 +101,62 @@ namespace Matchmancer.Character
             CurrentEnergy  = 0f;
             UltimateReady  = false;
             UltimateQueued = false;
+            _gearMods      = GearStatModifiers.Zero;
 
             RecalculateStatsForLevel(fullHeal: true);
+        }
+
+        /// <summary>
+        /// Currently applied gear bonuses (sum of every equipped piece).
+        /// </summary>
+        public GearStatModifiers GearModifiers => _gearMods;
+
+        /// <summary>
+        /// Replace the active gear modifiers and recalculate stats. Used by
+        /// <see cref="GearInventory"/> after equip/unequip. Keeps the current
+        /// HP ratio: if MaxHp grows, CurrentHp grows proportionally; if it
+        /// shrinks, CurrentHp clamps down. No-op on defeat.
+        ///
+        /// NOTE: Intended for out-of-battle / between-battle use. Mid-battle
+        /// gear swaps are not supported in MVP.
+        /// </summary>
+        public void SetGearModifiers(GearStatModifiers mods)
+        {
+            if (IsDefeated) return;
+
+            // Preserve HP ratio across the MaxHp delta.
+            int  oldMaxHp = MaxHp;
+            float ratio   = oldMaxHp > 0 ? (float)CurrentHp / oldMaxHp : 1f;
+
+            _gearMods = mods;
+            RecalculateStatsForLevel(fullHeal: false);
+
+            int oldHp = CurrentHp;
+            CurrentHp = (int)Math.Round(MaxHp * ratio);
+            if (CurrentHp < 0)     CurrentHp = 0;
+            if (CurrentHp > MaxHp) CurrentHp = MaxHp;
+            // At least 1 HP if we were alive before — gear should never kill.
+            if (CurrentHp == 0 && oldHp > 0) CurrentHp = 1;
+
+            if (CurrentHp != oldHp)
+                OnHpChanged?.Invoke(oldHp, CurrentHp, CurrentHp - oldHp);
         }
 
         private void RecalculateStatsForLevel(bool fullHeal)
         {
             int stepsAbove1 = Math.Max(0, Level - 1);
 
-            MaxHp          = _tuning.BaseMaxHp  + _tuning.HpPerLevel      * stepsAbove1;
-            CurrentAttack  = _tuning.BaseAttack + _tuning.AttackPerLevel  * stepsAbove1;
-            CurrentDefense = _tuning.BaseDefense+ _tuning.DefensePerLevel * stepsAbove1;
-            CurrentLuck    = _tuning.BaseLuck   + _tuning.LuckPerLevel    * stepsAbove1;
+            // Base (level-scaled) stats.
+            int   rawMaxHp   = _tuning.BaseMaxHp   + _tuning.HpPerLevel      * stepsAbove1;
+            float rawAttack  = _tuning.BaseAttack  + _tuning.AttackPerLevel  * stepsAbove1;
+            float rawDefense = _tuning.BaseDefense + _tuning.DefensePerLevel * stepsAbove1;
+            float rawLuck    = _tuning.BaseLuck    + _tuning.LuckPerLevel    * stepsAbove1;
+
+            // Layer gear modifiers on top.
+            MaxHp          = _gearMods.ApplyToMaxHp (rawMaxHp);
+            CurrentAttack  = _gearMods.ApplyToAttack (rawAttack);
+            CurrentDefense = _gearMods.ApplyToDefense(rawDefense);
+            CurrentLuck    = _gearMods.ApplyToLuck   (rawLuck);
 
             if (fullHeal) CurrentHp = MaxHp;
             else          CurrentHp = Math.Min(CurrentHp, MaxHp);
