@@ -9,6 +9,7 @@ using Matchmancer.Meter;
 using Matchmancer.Dice;
 using Matchmancer.StoneBlocks;
 using Matchmancer.Objectives;
+using Matchmancer.Combat;
 
 namespace Matchmancer.Core
 {
@@ -18,6 +19,11 @@ namespace Matchmancer.Core
     /// </summary>
     public class BoardController : MonoBehaviour
     {
+        // === Inspector ===
+        [Header("Combat")]
+        [Tooltip("Optional tuning asset. If null, CombatTuning.Default() is used.")]
+        [SerializeField] private CombatConfig _combatConfig;
+
         // === Systems ===
         private Board.Board _board;
         private MatchDetector _matchDetector;
@@ -30,6 +36,10 @@ namespace Matchmancer.Core
         private MoveTracker _moveTracker;
         private Scoring _scoring;
         private ObjectiveChecker _objectiveChecker;
+
+        // === Combat (Skill 12) ===
+        private CombatResolver _combatResolver;
+        private CombatStats    _combatStats;
 
         private BossMechanic _bossMechanic; // null for non-boss levels
         private int _turnCount;
@@ -52,6 +62,12 @@ namespace Matchmancer.Core
         public event Action<int> OnMoveDeducted;
         public event Action<LevelResult, int> OnLevelComplete; // result + stars
 
+        // === Combat events (Skill 12) ===
+        /// <summary>Fired for each CombatEffect produced by a match wave. Skill 13 will consume this.</summary>
+        public event Action<CombatEffect> OnCombatEffect;
+        /// <summary>Fired after all effects for one match wave have been dispatched.</summary>
+        public event Action<IReadOnlyList<CombatEffect>> OnCombatWaveResolved;
+
         // === Public State (read-only for UI) ===
         public Board.Board Board => _board;
         public int MovesRemaining => _moveTracker.MovesRemaining;
@@ -59,6 +75,8 @@ namespace Matchmancer.Core
         public int MeterCharge => _magickMeter.CurrentCharge;
         public int MeterMax => _magickMeter.MaxCapacity;
         public bool IsBusy => _isTurnInProgress;
+        /// <summary>Live battle stats for the current level. Rebuilt on every InitializeLevel.</summary>
+        public CombatStats CombatStats => _combatStats;
 
         /// <summary>
         /// Initialize all systems. Call this when loading a level.
@@ -79,6 +97,27 @@ namespace Matchmancer.Core
             _moveTracker = new MoveTracker(config.TotalMoves);
             _scoring = new Scoring(config.OneStar, config.TwoStar, config.ThreeStar, config.FourStar, config.FiveStar);
             _objectiveChecker = new ObjectiveChecker(config.Objective, _scoring, _moveTracker, _stoneBlockSystem);
+
+            // === Combat setup (Skill 12) ===
+            _combatStats = new CombatStats();
+            _combatStats.ResetForNewBattle();
+
+            // Detach old resolver (if this is a level restart) so we don't leak events.
+            if (_combatResolver != null)
+            {
+                _combatResolver.OnEffectResolved -= RaiseCombatEffect;
+                _combatResolver.OnWaveResolved   -= RaiseCombatWaveResolved;
+            }
+
+            var tuning = _combatConfig != null ? _combatConfig.ToTuning() : CombatTuning.Default();
+            _combatResolver = new CombatResolver(tuning, _combatStats, _rng);
+
+            // Forward resolver events up to BoardController's public surface so
+            // presentation-layer listeners (EnemyController in Skill 13, BattleUI, etc.)
+            // can subscribe to BoardController directly and ignore the resolver's
+            // internal lifecycle.
+            _combatResolver.OnEffectResolved += RaiseCombatEffect;
+            _combatResolver.OnWaveResolved   += RaiseCombatWaveResolved;
 
             // Place stone blocks from level config
             foreach (var stone in config.StoneBlocks)
@@ -204,13 +243,22 @@ namespace Matchmancer.Core
         /// </summary>
         private IEnumerator ResolveBoardUntilStable()
         {
+            int waveIndex = 0;
+
             while (true)
             {
                 // Step 2a-b: Find matches
                 var matches = _matchDetector.FindAllMatches();
                 if (matches.Count == 0) break;
 
+                waveIndex++;
                 OnMatchesFound?.Invoke(matches);
+
+                // Skill 12: resolve combat effects for this wave BEFORE tiles are removed,
+                // so presentation-layer listeners (Skill 13 enemy, VFX) still see valid
+                // tile positions. Enemy defense is applied by the listener, not here.
+                _combatResolver?.ResolveWave(matches, comboCount: waveIndex);
+
                 yield return new WaitForSeconds(0.15f); // match highlight window
 
                 foreach (var match in matches)
@@ -381,6 +429,25 @@ namespace Matchmancer.Core
                 TileType.WitchbreedThorn, TileType.SoulstreamShard, TileType.PetshaCharm
             };
             return types[_rng.Next(types.Length)];
+        }
+
+        // ------------------------------------------------------------------
+        // Combat event forwarding (Skill 12)
+        // ------------------------------------------------------------------
+
+        private void RaiseCombatEffect(CombatEffect effect)
+            => OnCombatEffect?.Invoke(effect);
+
+        private void RaiseCombatWaveResolved(IReadOnlyList<CombatEffect> effects)
+            => OnCombatWaveResolved?.Invoke(effects);
+
+        private void OnDestroy()
+        {
+            if (_combatResolver != null)
+            {
+                _combatResolver.OnEffectResolved -= RaiseCombatEffect;
+                _combatResolver.OnWaveResolved   -= RaiseCombatWaveResolved;
+            }
         }
 
         /// <summary>
