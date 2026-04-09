@@ -199,7 +199,7 @@ namespace Matchmancer.Enemy
             // Poison DoT — bypasses defense/armor by design.
             if (IsPoisoned)
             {
-                int dot = _tuning.PoisonDamagePerTurn * PoisonStacks;
+                int dot = (int)(_tuning.PoisonDamagePerTurn * PoisonStacks);
                 if (dot > 0)
                 {
                     int oldHp = CurrentHp;
