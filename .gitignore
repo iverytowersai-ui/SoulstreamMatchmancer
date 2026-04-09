@@ -1,2 +1,28 @@
 .superpowers/
 .DS_Store
+
+# Unity generated
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.pidb
+*.pdb
+*.mdb
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Local bootstrap patches (not part of the project)
+unity-bootstrap.patch
+unity-bootstrap.patch.save
