@@ -105,6 +105,17 @@ namespace Matchmancer.Tests
         [Test]
         public void FindAllMatches_StoneBlockBreaksRun()
         {
+            // Overwrite the single cell at (0,5) first: the SetUp's cycling
+            // init pattern happens to place PetshaCharm at that column, which
+            // would accidentally extend a 5-long PetshaCharm run to 6 cells,
+            // and the stone at col 2 would then leave a valid 3-match at
+            // cols 3-5. Breaking that collision lets us test *just* the
+            // stone-block behavior. We intentionally pick CovenSeal: col 6
+            // is already PortRune and col 4 will be PetshaCharm, so using
+            // CovenSeal at col 5 avoids creating any accidental new match.
+            var colFive = new GridPosition(0, 5);
+            _board.SetTile(colFive, new Tile(TileType.CovenSeal, colFive));
+
             SetRow(0, 0, 5, TileType.PetshaCharm);
             _board.SetStoneBlock(0, 2, true);
             var matches = _detector.FindAllMatches();

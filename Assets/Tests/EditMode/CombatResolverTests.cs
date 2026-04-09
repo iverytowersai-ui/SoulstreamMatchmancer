@@ -230,6 +230,12 @@ namespace Matchmancer.Tests
         [Test]
         public void ResolveWave_LuckMatch_IncrementsLuckTileCounter()
         {
+            // SetUp zeros LuckToCritRate to kill crit randomness, so restore
+            // a real value for this test specifically since it verifies the
+            // luck-bonus math itself.
+            _tuning.LuckToCritRate = 0.005f;
+            _resolver = new CombatResolver(_tuning, _stats, new Random(0));
+
             var match = MakeMatch(TileType.PetshaCharm, 3);
             var effects = _resolver.ResolveWave(Wave(match), comboCount: 1);
 
