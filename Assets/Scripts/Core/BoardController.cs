@@ -68,6 +68,15 @@ namespace Matchmancer.Core
         /// <summary>Fired after all effects for one match wave have been dispatched.</summary>
         public event Action<IReadOnlyList<CombatEffect>> OnCombatWaveResolved;
 
+        // === Character stats seam (Skill 14) ===
+        /// <summary>
+        /// Optional live player-stat provider. When set, its Attack/Luck are
+        /// passed into <see cref="CombatResolver.ResolveWave"/> each wave.
+        /// When null, the resolver falls back to its default (10, 0).
+        /// Assigned by <c>CharacterBattleController</c> at battle start.
+        /// </summary>
+        public ICharacterStatsSource CharacterStatsSource { get; set; }
+
         // === Public State (read-only for UI) ===
         public Board.Board Board => _board;
         public int MovesRemaining => _moveTracker.MovesRemaining;
@@ -257,7 +266,11 @@ namespace Matchmancer.Core
                 // Skill 12: resolve combat effects for this wave BEFORE tiles are removed,
                 // so presentation-layer listeners (Skill 13 enemy, VFX) still see valid
                 // tile positions. Enemy defense is applied by the listener, not here.
-                _combatResolver?.ResolveWave(matches, comboCount: waveIndex);
+                _combatResolver?.ResolveWave(
+                    matches,
+                    comboCount: waveIndex,
+                    characterAttack: CharacterStatsSource?.Attack ?? 10f,
+                    characterLuck:   CharacterStatsSource?.Luck   ?? 0f);
 
                 yield return new WaitForSeconds(0.15f); // match highlight window
 
