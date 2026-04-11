@@ -280,7 +280,7 @@ namespace Matchmancer.Tests
             var inv = new GearInventory();
             inv.AddItem(MakeItem("w", GearSlot.Weapon,   flatAtk: 10f, pctAtk: 0.10f));
             inv.AddItem(MakeItem("a", GearSlot.Armor,    flatDef: 5f,  flatHp: 20));
-            inv.AddItem(MakeItem("t", GearSlot.Talisman, flatLuck: 3f, pctMaxHp: 0.05f));
+            inv.AddItem(MakeItem("t", GearSlot.Talisman, flatLuck: 3f, pctHp: 0.05f));
             inv.AddItem(MakeItem("r", GearSlot.Relic,    flatAtk: 2f,  pctLuck: 0.20f));
 
             inv.Equip("w_inst");

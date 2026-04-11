@@ -106,5 +106,34 @@ namespace Matchmancer.Character
             _source.TryGetValue(instanceId, out var data);
             return data;
         }
+
+        /// <summary>
+        /// Resolve a tuning by id from the starter catalog plus anything seen
+        /// since boot. Used by SaveService to rebuild gear on load. For full
+        /// game coverage, also assign all GearData assets to <c>starterItems</c>
+        /// (or expand this to a dedicated catalog field in a future skill).
+        /// </summary>
+        public GearTuning ResolveTuning(string tuningId)
+        {
+            if (string.IsNullOrEmpty(tuningId)) return null;
+
+            if (starterItems != null)
+            {
+                foreach (var data in starterItems)
+                {
+                    if (data == null) continue;
+                    var tuning = data.ToTuning();
+                    if (tuning != null && tuning.Id == tuningId) return tuning;
+                }
+            }
+
+            foreach (var data in _source.Values)
+            {
+                if (data == null) continue;
+                var tuning = data.ToTuning();
+                if (tuning != null && tuning.Id == tuningId) return tuning;
+            }
+            return null;
+        }
     }
 }

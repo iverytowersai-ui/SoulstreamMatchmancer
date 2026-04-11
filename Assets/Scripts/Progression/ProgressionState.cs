@@ -249,6 +249,7 @@ namespace Matchmancer.Progression
         }
 
         /// <summary>Raw per-level state snapshot. Used by SaveSystem (Skill 20).</summary>
+        [Serializable]
         public class Snapshot
         {
             public bool[]  Completed;

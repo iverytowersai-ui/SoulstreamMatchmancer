@@ -51,10 +51,10 @@ namespace Matchmancer.Progression
             if (_progression != null && result.Victory && result.GlobalLevelIndex > 0)
             {
                 _progression.RecordLevelCompletion(
-                    globalLevelIndex: result.GlobalLevelIndex,
-                    stars:            stars.Stars,
-                    fiveStar:         stars.FiveStar,
-                    bestCombo:        result.MaxComboAchieved);
+                    globalIndex: result.GlobalLevelIndex,
+                    stars:       stars.Stars,
+                    fiveStar:    stars.FiveStar,
+                    bestCombo:   result.MaxComboAchieved);
             }
 
             OnBattleProcessed?.Invoke(result, stars, level);
