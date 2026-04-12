@@ -4,6 +4,8 @@ using Matchmancer.Achievements;
 using Matchmancer.Boosters;
 using Matchmancer.Character;
 using Matchmancer.Shop;
+using Matchmancer.Lore;
+using Matchmancer.Story;
 
 namespace Matchmancer.Save
 {
@@ -35,6 +37,8 @@ namespace Matchmancer.Save
         public GearInventorySnapshot       Gear;
         public WalletSnapshot              Wallet;
         public ShopSnapshot                Shop;
+        public LoreSnapshot                Lore;
+        public StoryTriggerSnapshot        Story;
 
         public bool IsEmpty =>
             Progression  == null &&
@@ -43,7 +47,9 @@ namespace Matchmancer.Save
             Boosters     == null &&
             Gear         == null &&
             Wallet       == null &&
-            Shop         == null;
+            Shop         == null &&
+            Lore         == null &&
+            Story        == null;
 
         public static SaveData CreateEmpty(string profileId = "main")
         {

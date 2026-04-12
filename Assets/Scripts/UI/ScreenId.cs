@@ -29,5 +29,8 @@ namespace Matchmancer.UI
         Achievements = 32,
         Settings     = 33,
         CharacterGear= 34,
+
+        // ---------- Story ----------
+        StoryOverlay = 40,
     }
 }

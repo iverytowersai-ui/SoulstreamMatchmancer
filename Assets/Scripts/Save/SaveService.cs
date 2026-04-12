@@ -3,6 +3,9 @@ using Matchmancer.Achievements;
 using Matchmancer.Boosters;
 using Matchmancer.Character;
 using Matchmancer.Progression;
+using Matchmancer.Shop;
+using Matchmancer.Lore;
+using Matchmancer.Story;
 
 namespace Matchmancer.Save
 {
@@ -29,6 +32,10 @@ namespace Matchmancer.Save
         public TitleSystem             Titles          { get; set; }
         public BoosterInventory        Boosters        { get; set; }
         public GearInventory           Gear            { get; set; }
+        public Wallet                  Wallet          { get; set; }
+        public ShopService             Shop            { get; set; }
+        public LoreLibrary             Lore            { get; set; }
+        public StoryTriggerSystem      Story           { get; set; }
 
         /// <summary>
         /// Resolver used by GearInventory.LoadFromSnapshot to map a tuning
@@ -72,6 +79,10 @@ namespace Matchmancer.Save
             if (Titles       != null) data.Titles       = Titles.CreateSnapshot();
             if (Boosters     != null) data.Boosters     = Boosters.CreateSnapshot();
             if (Gear         != null) data.Gear         = Gear.CreateSnapshot();
+            if (Wallet       != null) data.Wallet       = Wallet.CreateSnapshot();
+            if (Shop         != null) data.Shop         = Shop.CreateSnapshot();
+            if (Lore         != null) data.Lore         = Lore.CreateSnapshot();
+            if (Story        != null) data.Story        = Story.CreateSnapshot();
 
             return data;
         }
@@ -90,6 +101,10 @@ namespace Matchmancer.Save
             if (Boosters     != null && data.Boosters     != null) Boosters.LoadFromSnapshot(data.Boosters);
             if (Gear         != null && data.Gear         != null && GearTuningResolver != null)
                 Gear.LoadFromSnapshot(data.Gear, GearTuningResolver);
+            if (Wallet       != null && data.Wallet       != null) Wallet.LoadFromSnapshot(data.Wallet);
+            if (Shop         != null && data.Shop         != null) Shop.LoadFromSnapshot(data.Shop);
+            if (Lore         != null && data.Lore         != null) Lore.LoadFromSnapshot(data.Lore);
+            if (Story        != null && data.Story        != null) Story.LoadFromSnapshot(data.Story);
         }
 
         // ---------- Persistence ----------

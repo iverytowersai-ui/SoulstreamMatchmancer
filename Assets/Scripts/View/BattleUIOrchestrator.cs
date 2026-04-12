@@ -5,6 +5,7 @@ using Matchmancer.Combat;
 using Matchmancer.Character;
 using Matchmancer.Enemy;
 using Matchmancer.Progression;
+using Matchmancer.Objectives;
 
 namespace Matchmancer.View
 {
