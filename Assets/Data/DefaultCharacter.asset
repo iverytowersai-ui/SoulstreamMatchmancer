@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f88ad21b50b9486cb55fb6f85404740, type: 3}
+  m_Name: DefaultCharacter
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Character.CharacterData
+  displayName: Blue
+  loreDescription: 
+  portrait: {fileID: 0}
+  battleSprite: {fileID: 0}
+  baseMaxHp: 150
+  baseAttack: 10
+  baseDefense: 5
+  baseLuck: 0
+  hpPerLevel: 12
+  attackPerLevel: 1.2
+  defensePerLevel: 0.5
+  luckPerLevel: 0.2
+  ultimateName: Soul Surge
+  ultimateIcon: {fileID: 0}
+  ultimateDescription: 
+  maxEnergy: 100
+  ultimateDamageMultiplier: 3
+  xpPerLevel: 6400000096000000dc00000036010000a401000026020000bc0200006603000024040000

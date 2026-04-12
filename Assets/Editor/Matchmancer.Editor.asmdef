@@ -1,0 +1,14 @@
+{
+    "name": "Matchmancer.Editor",
+    "rootNamespace": "Matchmancer.Editor",
+    "references": ["Matchmancer.Runtime", "Unity.TextMeshPro"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

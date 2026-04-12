@@ -10,7 +10,8 @@ namespace Matchmancer.Story
     /// </summary>
     public class DialogueController : MonoBehaviour
     {
-        [SerializeField] private ScreenNavigator _screenNavigator;
+        [SerializeField] private ScreenNavigatorController _screenNavigatorController;
+        private ScreenNavigator _screenNavigator;
         [SerializeField] private GameObject _dialoguePanel;
 
         private DialogueRunner _currentRunner;
@@ -28,8 +29,10 @@ namespace Matchmancer.Story
 
         private void OnEnable()
         {
-            if (_screenNavigator == null)
-                _screenNavigator = FindObjectOfType<ScreenNavigator>();
+            if (_screenNavigatorController == null)
+                _screenNavigatorController = FindObjectOfType<ScreenNavigatorController>();
+            if (_screenNavigator == null && _screenNavigatorController != null)
+                _screenNavigator = _screenNavigatorController.Navigator;
         }
 
         // ------------------------------------------------------------------

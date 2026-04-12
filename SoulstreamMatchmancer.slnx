@@ -1,4 +1,6 @@
 ﻿<Solution>
   <Project Path="Matchmancer.Runtime.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="EditModeTests.csproj" />
+  <Project Path="Matchmancer.Editor.csproj" />
 </Solution>
