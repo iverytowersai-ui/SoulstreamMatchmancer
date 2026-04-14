@@ -75,7 +75,10 @@ public class CombatResolver : MonoBehaviour
             FireEffect(luckEffect);
         }
 
-        float effectiveLuck = characterLuck + waveLuckCritBonus * 100f; // convert bonus to luck units
+        // waveLuckCritBonus is already in crit-chance units (tiles * luckToCritRate);
+        // it's passed through to RollCrit as a direct bonus — no unit conversion needed.
+        // waveLuckComboBonus is a fractional boost to the combo multiplier applied in
+        // ResolveDamage via extraComboMultiplier.
 
         // 3 — Resolve remaining types in priority order
         TileType[] resolveOrder = {
@@ -95,7 +98,8 @@ public class CombatResolver : MonoBehaviour
                 TileType.Break   => ResolveBreak(groups[type], comboCount),
                 TileType.Debuff  => ResolveDebuff(groups[type], comboCount),
                 TileType.Damage  => ResolveDamage(groups[type], comboCount,
-                                        characterAttack, effectiveLuck, waveLuckComboBonus),
+                                        characterAttack, characterLuck,
+                                        waveLuckCritBonus, waveLuckComboBonus),
                 TileType.Defense => ResolveDefense(groups[type], comboCount),
                 TileType.Energy  => ResolveEnergy(groups[type], comboCount),
                 _                => default
@@ -116,29 +120,40 @@ public class CombatResolver : MonoBehaviour
 
     private CombatEffect ResolveDamage(List<Tile> tiles, int comboCount,
                                        float characterAttack, float luck,
-                                       float luckComboBonus)
+                                       float bonusCritChance, float luckComboBonus)
     {
         int   matchSize = tiles.Count;
-        float baseDmg   = CombatFormula.CalculateDamage(
-                              combatConfig, matchSize, characterAttack,
-                              comboCount, luck, enemyDefense: 0f);
-                              // Enemy defense subtracted by EnemyController, not here.
 
-        bool  isCrit    = CombatFormula.RollCrit(combatConfig,
-                              luck + luckComboBonus * combatConfig.baseCritChance);
+        // Base damage (pre-crit). Luck tiles boost the combo multiplier via
+        // extraComboMultiplier = 1 + luckComboBonus (e.g. 0.15 = +15% per pair).
+        float baseDmg = CombatFormula.CalculateDamage(
+                            combatConfig, matchSize, characterAttack,
+                            comboCount, luck, enemyDefense: 0f,
+                            extraComboMultiplier: 1f + luckComboBonus);
+                            // Enemy defense subtracted by EnemyController, not here.
 
-        float finalDmg  = isCrit ? baseDmg * combatConfig.critDamageMultiplier : baseDmg;
-        finalDmg        = Mathf.Max(0f, finalDmg);
+        // Single crit roll: character luck + any wave-scoped Luck tile crit bonus.
+        bool  isCrit   = CombatFormula.RollCrit(combatConfig, luck, bonusCritChance);
+        float finalDmg = isCrit ? baseDmg * combatConfig.critDamageMultiplier : baseDmg;
+
+        // Apply queued ultimate multiplier (returns 1f if not queued — no-op).
+        // Done here (not in UltimateSystem) because CombatEffect is a struct and
+        // event subscribers can't mutate it after the fact.
+        float ultMult = characterRuntime != null
+                        ? characterRuntime.ConsumeUltimateMultiplier()
+                        : 1f;
+        finalDmg *= ultMult;
+        finalDmg  = Mathf.Max(0f, finalDmg);
 
         CombatStats.Instance?.RecordDamage(finalDmg, isCrit);
 
         return new CombatEffect
         {
-            SourceType   = TileType.Damage,
-            DamageDealt  = finalDmg,
+            SourceType    = TileType.Damage,
+            DamageDealt   = finalDmg,
             IsCriticalHit = isCrit,
-            MatchSize    = matchSize,
-            ComboCount   = comboCount
+            MatchSize     = matchSize,
+            ComboCount    = comboCount
         };
     }
 

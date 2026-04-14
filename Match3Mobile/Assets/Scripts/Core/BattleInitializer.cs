@@ -51,11 +51,19 @@ public class BattleInitializer : MonoBehaviour
             enemyTurnController.StartBattle(stageNumber);
         }
 
-        // Listen for battle end
+        // Listen for battle end. Unsubscribe first so repeated InitialiseBattle()
+        // calls (e.g. level restart) don't cause HandleVictory/HandleDefeat to fire
+        // multiple times per event.
         if (enemyController != null)
+        {
+            enemyController.OnEnemyDefeated -= HandleVictory;
             enemyController.OnEnemyDefeated += HandleVictory;
+        }
         if (characterRuntime != null)
+        {
+            characterRuntime.OnPlayerDefeated -= HandleDefeat;
             characterRuntime.OnPlayerDefeated += HandleDefeat;
+        }
     }
 
     private void HandleVictory()

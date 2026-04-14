@@ -73,6 +73,14 @@ public class CharacterRuntime : MonoBehaviour
     /// <summary>Call at the start of each battle.</summary>
     public void InitialiseForBattle(CharacterData characterData, int level)
     {
+        if (characterData == null)
+        {
+            Debug.LogError(
+                "[CharacterRuntime] InitialiseForBattle called with null CharacterData — " +
+                "aborting. Check the BattleInitializer inspector wiring.", this);
+            return;
+        }
+
         data           = characterData;
         currentLevel   = Mathf.Max(1, level);
         isDefeated     = false;

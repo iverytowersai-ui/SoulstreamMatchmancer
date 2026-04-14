@@ -45,6 +45,7 @@ public class CombatStats : MonoBehaviour
     // Completion
     public bool  IsVictory          { get; private set; }
     public float BattleDuration     { get; private set; }
+    public bool  BattleEnded        { get; private set; }  // true after any RecordVictory call
     #endregion
 
     #region Events
@@ -70,6 +71,7 @@ public class CombatStats : MonoBehaviour
         UltimatesActivated  = 0;
         LuckTilesMatched    = 0;
         IsVictory           = false;
+        BattleEnded         = false;
         BattleDuration      = 0f;
         battleStartTime     = Time.time;
     }
@@ -104,7 +106,12 @@ public class CombatStats : MonoBehaviour
     public void RecordEnergy(float amount)            => TotalEnergyGenerated += amount;
     public void RecordUltimate()                      => UltimatesActivated++;
     public void RecordLuckTile()                      => LuckTilesMatched++;
-    public void RecordVictory(bool won, float time)   { IsVictory = won; BattleDuration = time; }
+    public void RecordVictory(bool won, float time)
+    {
+        IsVictory      = won;
+        BattleDuration = time;
+        BattleEnded    = true;  // freezes the Update() timer regardless of win/loss
+    }
     #endregion
 
     #region Unity Lifecycle
@@ -112,7 +119,8 @@ public class CombatStats : MonoBehaviour
     private void Start() => battleStartTime = Time.time;
     private void Update()
     {
-        if (!IsVictory) BattleDuration = Time.time - battleStartTime;
+        // Freeze timer once the battle ends (victory OR defeat), not just on win.
+        if (!BattleEnded) BattleDuration = Time.time - battleStartTime;
     }
     #endregion
 }
