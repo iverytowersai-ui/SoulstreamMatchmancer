@@ -204,8 +204,8 @@ namespace Matchmancer.Tests
             var inv = new GearInventory();
             var runtime = BuildRuntimeWiredTo(inv, _tuning);
 
-            // Take damage down to 1 HP
-            runtime.TakeEnemyDamage(9999f);
+            // Take damage down to 1 HP (100 base HP - (104 raw - 5 def) = 1)
+            runtime.TakeEnemyDamage(104f);
             Assert.AreEqual(1, runtime.CurrentHp);
             Assert.IsFalse(runtime.IsDefeated);
 

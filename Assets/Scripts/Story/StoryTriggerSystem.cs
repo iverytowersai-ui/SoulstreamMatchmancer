@@ -85,10 +85,9 @@ namespace Matchmancer.Story
         /// <summary>Create a snapshot of the seen state for save/restore.</summary>
         public StoryTriggerSnapshot CreateSnapshot()
         {
-            return new StoryTriggerSnapshot
-            {
-                SeenSceneIds = new string[_seenSceneIds.Count],
-            };
+            var ids = new string[_seenSceneIds.Count];
+            _seenSceneIds.CopyTo(ids);
+            return new StoryTriggerSnapshot { SeenSceneIds = ids };
         }
 
         /// <summary>Restore seen state from a snapshot.</summary>

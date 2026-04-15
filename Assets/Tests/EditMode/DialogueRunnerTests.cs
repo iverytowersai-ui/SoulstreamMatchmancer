@@ -330,13 +330,12 @@ namespace Matchmancer.Tests
                 Nodes = new[]
                 {
                     new StoryNode { Type = StoryNodeType.Dialogue, Text = "Pick one.", SpeakerName = "NPC" },
-                    new StoryNode { Type = StoryNodeType.Narration, Text = "Waiting..." },
                     new StoryNode
                     {
                         Type = StoryNodeType.Choice,
                         Text = "What do you choose?",
                         ChoiceTexts = new[] { "Choice A", "Choice B" },
-                        ChoiceNextIndices = new[] { 3, 4 },
+                        ChoiceNextIndices = new[] { 2, 3 },
                     },
                     new StoryNode { Type = StoryNodeType.Narration, Text = "You chose A." },
                     new StoryNode { Type = StoryNodeType.Narration, Text = "You chose B." },
