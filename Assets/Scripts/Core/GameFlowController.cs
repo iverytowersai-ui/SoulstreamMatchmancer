@@ -2,6 +2,7 @@ using UnityEngine;
 using Matchmancer.UI;
 using Matchmancer.Progression;
 using Matchmancer.Character;
+using Matchmancer.Save;
 
 namespace Matchmancer.Core
 {
@@ -325,8 +326,6 @@ namespace Matchmancer.Core
 
         private void SaveVictory(BattleResult result)
         {
-            // TODO: Wire to SaveManager once save flow is connected
-            // For now, just log
             int stars = 0;
             if (_selectedLevel != null)
             {
@@ -337,8 +336,11 @@ namespace Matchmancer.Core
                 else if (result.FinalScore >= _selectedLevel.oneStar) stars = 1;
             }
 
-            Debug.Log($"[GameFlowController] Victory saved — Level {result.GlobalLevelIndex}, " +
+            Debug.Log($"[GameFlowController] Victory — Level {result.GlobalLevelIndex}, " +
                       $"Score {result.FinalScore}, Stars {stars}");
+
+            if (SaveManager.Instance != null)
+                SaveManager.Instance.TrySave();
         }
     }
 }

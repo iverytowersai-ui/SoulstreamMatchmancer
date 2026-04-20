@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matchmancer — Full Skill Map</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d0d1a; color: #e0dfe6; padding: 32px; }
+  h1 { text-align: center; font-size: 28px; color: #c9a0ff; margin-bottom: 8px; letter-spacing: 1px; }
+  .subtitle { text-align: center; font-size: 14px; color: #7a7890; margin-bottom: 40px; }
+  .legend { display: flex; gap: 20px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .section { margin-bottom: 36px; }
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-left: 12px; border-left: 4px solid; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card { border-radius: 12px; padding: 16px; position: relative; transition: transform 0.15s; }
+  .card:hover { transform: translateY(-2px); }
+  .card-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 12.5px; line-height: 1.5; opacity: 0.85; }
+  .card-status { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; }
+  .done { background: #1a3a1a; color: #5ddb5d; }
+  .next { background: #3a2a1a; color: #dba35d; }
+  .future { background: #1a1a2a; color: #7a7adb; }
+
+  /* Section colors */
+  .engine .section-title { border-color: #4a9eff; color: #4a9eff; }
+  .engine .card { background: #111528; border: 1px solid #1c2444; }
+  .engine .card-num { color: #4a9eff; }
+
+  .combat .section-title { border-color: #ff4a6a; color: #ff4a6a; }
+  .combat .card { background: #1c1118; border: 1px solid #2e1a24; }
+  .combat .card-num { color: #ff4a6a; }
+
+  .rpg .section-title { border-color: #c9a0ff; color: #c9a0ff; }
+  .rpg .card { background: #18112a; border: 1px solid #261a3e; }
+  .rpg .card-num { color: #c9a0ff; }
+
+  .progression .section-title { border-color: #ffcc4a; color: #ffcc4a; }
+  .progression .card { background: #1c1a11; border: 1px solid #2e2a1a; }
+  .progression .card-num { color: #ffcc4a; }
+
+  .ui .section-title { border-color: #4adbc9; color: #4adbc9; }
+  .ui .card { background: #111c1a; border: 1px solid #1a2e2a; }
+  .ui .card-num { color: #4adbc9; }
+
+  .flow-arrow { text-align: center; font-size: 24px; color: #333; margin: 8px 0; }
+
+  .master-card { background: linear-gradient(135deg, #1a0a2e, #0a1a2e); border: 2px solid #c9a0ff; border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 32px; }
+  .master-card h2 { font-size: 22px; color: #c9a0ff; margin-bottom: 8px; }
+  .master-card p { font-size: 13px; color: #9a8ab0; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+  .dep-note { font-size: 11px; color: #555; margin-top: 6px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>SOULSTREAM: MATCHMANCER</h1>
+<p class="subtitle">Full Skill Build Map — 25 Skills, 4 Layers</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#5ddb5d"></div> Built</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#dba35d"></div> Next Up</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7a7adb"></div> Future</div>
+</div>
+
+<div class="master-card">
+  <h2>Master Prompt</h2>
+  <p>The brain. Routes to all 25 skills, holds architecture decisions, build order, and the full system map. Load this first in any session — it tells Claude what's built and what's next.</p>
+</div>
+
+<!-- LAYER 1: ENGINE -->
+<div class="section engine">
+  <div class="section-title">Layer 1 — Match-3 Engine (Skills 01–10)</div>
+  <div class="cards">
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 01</div>
+      <div class="card-title">Project Setup & Folders</div>
+      <div class="card-desc">Unity folder structure, ObjectPool, GameManager / ScoreManager / LevelManager singletons, LevelData ScriptableObject, scene hierarchy.</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 02</div>
+      <div class="card-title">Grid & Tile System</div>
+      <div class="card-desc">GameBoard.cs 2D array, Tile.cs MonoBehaviour with smooth coroutine movement, initial board randomization with no pre-existing matches.</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 03</div>
+      <div class="card-title">Match Detection</div>
+      <div class="card-desc">MatchFinder.cs — horizontal + vertical runs of 3+, union-find merge for L/T/cross shapes, swap validation, deadlock detection.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 04</div>
+      <div class="card-title">Input & Swap System</div>
+      <div class="card-desc">Touch/mouse input, tile selection, swipe direction detection, animated swap with coroutine, invalid-swap snap-back.</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 05</div>
+      <div class="card-title">Gravity & Board Refill</div>
+      <div class="card-desc">Tiles fall into empty spaces after clears. Refill from top using pool recycling with staggered spawn heights.</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 06</div>
+      <div class="card-title">Chain Reactions & Combos</div>
+      <div class="card-desc">MatchResolver.cs cascade loop: find → clear → gravity → refill → repeat. Combo multiplier scoring. Auto-shuffle on deadlock.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 07</div>
+      <div class="card-title">VFX & Particles</div>
+      <div class="card-desc">Color-tinted match particles, combo burst, floating score popups, screen shake. All pooled for mobile.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 08</div>
+      <div class="card-title">Audio System</div>
+      <div class="card-desc">AudioManager singleton, background music, 11 SFX types, combo pitch scaling, fade in/out, volume via PlayerPrefs.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 09</div>
+      <div class="card-title">UI / HUD / Menus</div>
+      <div class="card-desc">In-game HUD (score, moves, stars, combo banner), main menu, level complete / game over popups, pause menu.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 10</div>
+      <div class="card-title">Save, Polish & Mobile Build</div>
+      <div class="card-desc">PlayerPrefs save, AppInitializer, Sprite Atlas, Android/iOS build config, pre-release checklist.</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">⬇</div>
+
+<!-- LAYER 2: COMBAT -->
+<div class="section combat">
+  <div class="section-title">Layer 2 — Combat System (Skills 11–13)</div>
+  <div class="cards">
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 11</div>
+      <div class="card-title">Tile Types & Combat Formula</div>
+      <div class="card-desc">6 tile types (Damage/Energy/Defense/Debuff/Break/Luck), TileTypeData ScriptableObjects, CombatFormula static calculator, CombatConfig tuning asset, CombatStats live tracker.</div>
+      <div class="dep-note">Foundation — everything sits on this</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 12</div>
+      <div class="card-title">Combat Resolver</div>
+      <div class="card-desc">Reads matched tile groups, calculates effects via CombatFormula, fires events. Bridge between puzzle engine and RPG combat. BattleBridge temp logger.</div>
+      <div class="dep-note">Depends on: Skill 11</div>
+    </div>
+    <div class="card">
+      <span class="card-status done">BUILT</span>
+      <div class="card-num">Skill 13</div>
+      <div class="card-title">Enemy System</div>
+      <div class="card-desc">EnemyData ScriptableObject, EnemyController runtime (HP, armor, defense, turn timer), StatusEffectSystem (poison, vulnerability, armor break), enemy attack turn.</div>
+      <div class="dep-note">Depends on: Skills 11–12</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">⬇</div>
+
+<!-- LAYER 3: RPG -->
+<div class="section rpg">
+  <div class="section-title">Layer 3 — RPG Systems (Skills 14–16)</div>
+  <div class="cards">
+    <div class="card">
+      <span class="card-status next">NEXT</span>
+      <div class="card-num">Skill 14</div>
+      <div class="card-title">Character System</div>
+      <div class="card-desc">CharacterData ScriptableObject, CharacterRuntime (HP, shield, energy), UltimateSystem energy meter + activation, receives enemy attacks.</div>
+      <div class="dep-note">Depends on: Skills 11–13</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 15</div>
+      <div class="card-title">Gear System</div>
+      <div class="card-desc">Gear slots, stat bonuses from equipped items, GearData ScriptableObject, equip/unequip flow.</div>
+      <div class="dep-note">Depends on: Skill 14</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 16</div>
+      <div class="card-title">Inventory & Boosters</div>
+      <div class="card-desc">InventoryManager for consumable quantities, BoosterEffect per-booster behavior, persistence, in-battle use tracking.</div>
+      <div class="dep-note">Depends on: Skill 14</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">⬇</div>
+
+<!-- LAYER 4: PROGRESSION -->
+<div class="section progression">
+  <div class="section-title">Layer 4 — Progression & Economy (Skills 17–20)</div>
+  <div class="cards">
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 17</div>
+      <div class="card-title">Level & Stage Data</div>
+      <div class="card-desc">100-level structure (10 stages × 10 levels), LevelData + StageData ScriptableObjects, LevelProgressionManager, difficulty ladder.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 18</div>
+      <div class="card-title">Stars & Results</div>
+      <div class="card-desc">3-star / 5-star rating criteria, results screen data, completion loop, replay incentives.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 19</div>
+      <div class="card-title">Achievements & Titles</div>
+      <div class="card-desc">AchievementTracker for cumulative stats, TitleSystem for unlocking and equipping vanity titles.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 20</div>
+      <div class="card-title">Progression System</div>
+      <div class="card-desc">Stage unlock gating, reward distribution, ISaveBackend abstraction, full MatchmancerSaveData schema.</div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow">⬇</div>
+
+<!-- LAYER 5: UI & STORY -->
+<div class="section ui">
+  <div class="section-title">Layer 5 — UI, Shop & Story (Skills 21–25)</div>
+  <div class="cards">
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 21</div>
+      <div class="card-title">UI Screens & Flow</div>
+      <div class="card-desc">Load screen, login/guest flow, main hub, stage select, level select — the full navigation shell.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 22</div>
+      <div class="card-title">Shop System</div>
+      <div class="card-desc">Magickal Bazaar layout, currency system, consumable purchase flow.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 23</div>
+      <div class="card-title">Lore & Gallery</div>
+      <div class="card-desc">Lore page, character gallery, story unlocks — the Soulstream world-building layer.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 24</div>
+      <div class="card-title">Battle Screen UI</div>
+      <div class="card-desc">Enemy HP bar, player HP/shield/energy bars, ultimate button, status icons, combo display, turn counter.</div>
+    </div>
+    <div class="card">
+      <span class="card-status future">FUTURE</span>
+      <div class="card-num">Skill 25</div>
+      <div class="card-title">Story & Dialogue</div>
+      <div class="card-desc">DialogueController, StorySceneData ScriptableObjects, StoryTriggerSystem — narrative between levels.</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; margin-top:48px; padding:24px; background:#111; border-radius:12px; max-width:600px; margin-left:auto; margin-right:auto;">
+  <div style="font-size:14px; color:#c9a0ff; font-weight:700; margin-bottom:8px;">BUILD ORDER</div>
+  <div style="font-size:12px; color:#7a7890; line-height:2;">
+    11 → 12 → 13 → <span style="color:#dba35d; font-weight:700;">14</span> → 15 → 16 → 17 → 18 → 19 → 20 → 21 → 22 → 23 → 24 → 25<br>
+    <span style="color:#5ddb5d;">■ ■ ■</span> <span style="color:#dba35d;">■</span> <span style="color:#555;">■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■</span>
+  </div>
+  <div style="font-size:11px; color:#555; margin-top:8px;">Engine Skills 04, 07–10 can be built in parallel alongside RPG skills</div>
+</div>
+
+</body>
+</html>

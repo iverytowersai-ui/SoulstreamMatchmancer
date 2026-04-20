@@ -1,0 +1,12 @@
+Gameplay Screen Notes:
+- 9x9 board, portrait orientation
+- Top bar = moves counter (left) + objective icons (right)
+- Bottom left = Blue character portrait
+- Bottom center = Blue ultimate charge meter
+- Bottom right = 3 booster slots (Bomb, Line, Swap)
+- Pause button top-right corner
+- Background = stormy urban rooftop, electric-blue atmosphere
+- Tiles must be high-contrast, readable at 60x60px
+- Match 3+ horizontal or vertical
+- Adjacent swap only, no diagonal
+- Moves-based fail state

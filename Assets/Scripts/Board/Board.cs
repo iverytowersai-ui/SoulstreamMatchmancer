@@ -5,8 +5,8 @@ namespace Matchmancer.Board
 {
     public class Board
     {
-        public const int Rows = 8;
-        public const int Cols = 8;
+        public const int Rows = 9;
+        public const int Cols = 9;
 
         private readonly Tile[,] _grid = new Tile[Rows, Cols];
         private readonly bool[,] _stoneBlockMap = new bool[Rows, Cols];

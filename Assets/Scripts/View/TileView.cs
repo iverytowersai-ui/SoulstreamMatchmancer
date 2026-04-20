@@ -45,7 +45,24 @@ namespace Matchmancer.View
 
             if (_spriteRenderer != null)
             {
-                _spriteRenderer.color = GetTileColor(type);
+                string spritePath = GetSpritePath(type);
+                if (!string.IsNullOrEmpty(spritePath))
+                {
+                    var loadedSprite = Resources.Load<Sprite>(spritePath);
+                    if (loadedSprite != null)
+                    {
+                        _spriteRenderer.sprite = loadedSprite;
+                        _spriteRenderer.color = Color.white; // Drop the tint since placeholders are pre-colored
+                    }
+                    else
+                    {
+                        _spriteRenderer.color = GetTileColor(type);
+                    }
+                }
+                else
+                {
+                    _spriteRenderer.color = GetTileColor(type);
+                }
                 _spriteRenderer.enabled = type != TileType.None;
             }
 
@@ -134,6 +151,20 @@ namespace Matchmancer.View
                 SigilType.Star => StarSigilColor,
                 SigilType.Nova => NovaSigilColor,
                 _ => Color.clear
+            };
+        }
+
+        private static string GetSpritePath(TileType type)
+        {
+            return type switch
+            {
+                TileType.PortRune => "Tiles/ph_port_rune",
+                TileType.OzoneMark => "Tiles/ph_ozone_mark",
+                TileType.CovenSeal => "Tiles/ph_coven_seal",
+                TileType.WitchbreedThorn => "Tiles/ph_witchbreed_thorn",
+                TileType.SoulstreamShard => "Tiles/ph_soulstream_shard",
+                TileType.PetshaCharm => "Tiles/ph_petsha_charm",
+                _ => null
             };
         }
     }

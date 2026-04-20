@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using Matchmancer.Progression;
+using Matchmancer.Objectives;
 
 namespace Matchmancer.Editor
 {

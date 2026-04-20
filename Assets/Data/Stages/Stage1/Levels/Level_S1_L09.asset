@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S1_L09
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: 1-9 The Last Gate
+  stageIndex: 1
+  levelIndex: 9
+  globalIndex: 9
+  enemy: {fileID: 11400000, guid: b1111111111111111111111111111103, type: 2}
+  totalMoves: 20
+  meterCapacity: 100
+  oneStar: 2600
+  twoStar: 4550
+  threeStar: 6500
+  fourStar: 8500
+  fiveStar: 11000
+  objective:
+    type: 0
+    targetScore: 6500
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks:
+  - row: 1
+    col: 2
+    hp: 4
+  - row: 1
+    col: 5
+    hp: 4
+  - row: 6
+    col: 2
+    hp: 4
+  - row: 6
+    col: 5
+    hp: 4
+  - row: 3
+    col: 3
+    hp: 3
+  - row: 4
+    col: 4
+    hp: 3
+  goldReward: 28
+  xpReward: 42
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: 'Armor + 6 stones. Prep for boss.'

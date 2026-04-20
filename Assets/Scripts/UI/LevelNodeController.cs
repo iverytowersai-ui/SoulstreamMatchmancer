@@ -22,10 +22,12 @@ namespace Matchmancer.UI
         [SerializeField] private GameObject[]    _starIcons; // Standard 3 stars
 
         [Header("Layout Tuning")]
+#pragma warning disable 0414 // Reserved for future node self-layout; currently positioned by parent builder.
         [SerializeField] private float _columnLeft   = 270f;
         [SerializeField] private float _columnCenter = 540f;
         [SerializeField] private float _columnRight  = 810f;
         [SerializeField] private float _vSpacing     = 140f;
+#pragma warning restore 0414
 
         private LevelNodeViewModel _data;
         private Action<LevelNodeViewModel> _onClicked;

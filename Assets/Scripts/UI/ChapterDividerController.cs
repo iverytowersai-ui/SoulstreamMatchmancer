@@ -15,9 +15,11 @@ namespace Matchmancer.UI
         [SerializeField] private GameObject      _lockOverlay;
 
         [Header("Layout")]
+#pragma warning disable 0414 // Reserved for future divider self-layout; currently positioned by parent builder.
         [SerializeField] private float _nodeVSpacing = 140f;
         [SerializeField] private float _dividerVSpacing = 240f;
         [SerializeField] private float _headerOffset = 100f;
+#pragma warning restore 0414
 
         /// <summary>
         /// Configures the divider and positions it.

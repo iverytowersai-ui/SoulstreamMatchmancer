@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Soulstream: Magick Dice - Asset Generator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #7B2CBF 0%, #00D4FF 50%, #FFD700 100%);
+            padding: 3px;
+            margin-bottom: 20px;
+        }
+        
+        .header-inner {
+            background: #0a0a0f;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 2em;
+            background: linear-gradient(90deg, #FFD700, #00D4FF, #7B2CBF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #FFD700;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #888;
+        }
+        
+        .tab:hover {
+            background: rgba(50, 50, 80, 0.8);
+            color: #00D4FF;
+        }
+        
+        .tab.active {
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.2), rgba(30, 30, 50, 0.9));
+            border-color: #00D4FF;
+            color: #00D4FF;
+        }
+        
+        .tab.witchbreed.active { border-color: #7B2CBF; color: #7B2CBF; background: linear-gradient(180deg, rgba(123, 44, 191, 0.2), rgba(30, 30, 50, 0.9)); }
+        .tab.mancer.active { border-color: #FFD700; color: #FFD700; background: linear-gradient(180deg, rgba(255, 215, 0, 0.2), rgba(30, 30, 50, 0.9)); }
+        .tab.jreamer.active { border-color: #00D4FF; color: #00D4FF; }
+        
+        .content-panel {
+            background: rgba(20, 20, 35, 0.95);
+            border: 1px solid #333;
+            border-radius: 0 12px 12px 12px;
+            padding: 30px;
+            min-height: 600px;
+        }
+        
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .asset-card {
+            background: linear-gradient(145deg, rgba(40, 40, 60, 0.9), rgba(25, 25, 40, 0.9));
+            border: 1px solid #444;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .asset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+            border-color: #00D4FF;
+        }
+        
+        .asset-card.witchbreed:hover { box-shadow: 0 10px 40px rgba(123, 44, 191, 0.3); border-color: #7B2CBF; }
+        .asset-card.mancer:hover { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3); border-color: #FFD700; }
+        
+        .card-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: #fff;
+        }
+        
+        .card-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .badge-base { background: #444; color: #888; }
+        .badge-common { background: linear-gradient(90deg, #C0C0C0, #888); color: #000; }
+        .badge-rare { background: linear-gradient(90deg, #00D4FF, #0088aa); color: #000; }
+        .badge-unique { background: linear-gradient(90deg, #7B2CBF, #5a1f8f); color: #fff; }
+        .badge-supernatural { background: linear-gradient(90deg, #FFD700, #ff8c00); color: #000; }
+        
+        .card-meta {
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+            color: #888;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        .card-prompt {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.8em;
+            line-height: 1.5;
+            color: #aaa;
+        }
+        
+        .card-prompt::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .card-prompt::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        
+        .card-prompt::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+        
+        .card-actions {
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-copy {
+            background: linear-gradient(90deg, #00D4FF, #0088aa);
+            color: #000;
+        }
+        
+        .btn-copy:hover {
+            background: linear-gradient(90deg, #00ffff, #00D4FF);
+            transform: scale(1.02);
+        }
+        
+        .btn-copy.copied {
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+        }
+        
+        .btn-mark {
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            border: 1px solid #FFD700;
+        }
+        
+        .btn-mark:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn-mark.done {
+            background: #FFD700;
+            color: #000;
+        }
+        
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .section-title .icon {
+            font-size: 1.5em;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, #00D4FF, #00ffff);
+            color: #000;
+            border-radius: 8px;
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7B2CBF, #00D4FF, #FFD700);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: #888;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(30, 30, 50, 0.8);
+            border: 1px solid #333;
+            border-radius: 20px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00D4FF;
+            color: #00D4FF;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+        }
+        
+        .asset-card.highlight {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-inner">
+            <div class="logo">⚔️ SOULSTREAM: MAGICK DICE</div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-count">46</div>
+                    <div class="stat-label">Total Assets</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="copied-count">0</div>
+                    <div class="stat-label">Copied</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="done-count">0</div>
+                    <div class="stat-label">Generated</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="creatures">🐉 Creatures (9)</div>
+            <div class="tab witchbreed" data-tab="frames">⚜️ Frames (5)</div>
+            <div class="tab jreamer" data-tab="magick">🔮 Magick Icons (13)</div>
+            <div class="tab mancer" data-tab="emblems">🏴 Emblems (3)</div>
+            <div class="tab" data-tab="board">🎮 Board (12)</div>
+            <div class="tab" data-tab="ui">🎛️ UI (4)</div>
+        </div>
+        
+        <div class="content-panel">
+            <!-- CREATURES -->
+            <div id="creatures" class="tab-content">
+                <div class="section-title"><span class="icon">🐉</span> Familiaris Creatures</div>
+                <div class="filter-bar">
+                    <span class="filter-label">Filter by Tier:</span>
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="tier-1">Tier 1 (Base)</button>
+                    <button class="filter-btn" data-filter="tier-2">Tier 2 (Common)</button>
+                    <button class="filter-btn" data-filter="tier-3">Tier 3 (Rare)</button>
+                    <button class="filter-btn" data-filter="tier-4">Tier 4 (Unique)</button>
+                    <button class="filter-btn" data-filter="tier-5">Tier 5 (Supernatural)</button>
+                </div>
+                <div class="asset-grid" id="creatures-grid"></div>
+            </div>
+            
+            <!-- FRAMES -->
+            <div id="frames" class="tab-content hidden">
+                <div class="section-title"><span class="icon">⚜️</span> Rarity Frames</div>
+                <div class="asset-grid" id="frames-grid"></div>
+            </div>
+            
+            <!-- MAGICK ICONS -->
+            <div id="magick" class="tab-content hidden">
+                <div class="section-title"><span class="icon">🔮</span> Schools of Magick Icons</div>
+                <div class="asset-grid" id="magick-grid"></div>
+            </div>
+            
+            <!-- EMBLEMS -->
+            <div id="emblems" class="tab-content hidden">
+                <div class="section-title"><span class="icon">🏴</span> Class Emblems</div>
+                <div class="asset-grid" id="emblems-grid"></div>
+            </div>
+            
+            <!-- BOARD -->
+            <div id="board" class="tab-content hidden">
+                <div class="section-title"><span class="icon">🎮</span> Slide Board System</div>
+                <div class="asset-grid" id="board-grid"></div>
+            </div>
+            
+            <!-- UI -->
+            <div id="ui" class="tab-content hidden">
+                <div class="section-title"><span class="icon">🎛️</span> UI Controls</div>
+                <div class="asset-grid" id="ui-grid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast">✓ Prompt copied to clipboard!</div>
+
+    <script>
+        // Asset Data
+        const assets = {
+            creatures: [
+                { id: "IMG_0001", name: "THE WORM", tier: "tier-1", rarity: "Base", color: "#7B2CBF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: adorable chibi familiar worm with iridescent segmented body of living amethyst crystal, each segment containing trapped starlight that pulses with ancient wisdom, oversized crystalline eyes reflecting entire galaxies, bioluminescent slime trail forming arcane protective sigils on moss-covered rune stone, tiny crown of silver thorns, the most photorealistic creature portrait ever captured ::1.3 shot on ARRI Alexa 65 + Panavision T-Series Anamorphic 40mm, Hasselblad X2D 100C medium format ::0.9 chiaroscuro moonlight with volumetric cyan mist #00D4FF edge glow, gothic garden environment with soft focus tombstones ::0.8 RAW.16bit.ACEScg.4444XQ, deleted HBO creature design archive, House of the Dragon production still, natural skin imperfections on crystalline surface, halation_glow2024, filename: familiar_worm_base_C0001.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750` },
+                { id: "IMG_0002", name: "THE BAT", tier: "tier-2", rarity: "Common", color: "#7B2CBF", aspect: "1:1", prompt: `lost film archive, warnerbros .com, stills archive :: hyper-detailed chibi vampire bat familiar with velvety obsidian fur containing microscopic purple #7B2CBF crystal formations, oversized luminous amber eyes reflecting flickering candlelight and trapped souls, silver-tipped wing membranes thin enough to see veins pulsing with dark magic, tiny silver chain collar with SHANDOR faction crest, perched regally on leather-bound grimoire in candlelit tower ::1.4 the most realistic photograph ever captured, award-winning fantasy creature photography ::1.1 shot on RED V-RAPTOR 8K VistaVision + Zeiss Supreme Prime 35mm, PhaseOne IQ4 150MP ::0.9 warm amber key light creating dramatic chiaroscuro with cool purple #7B2CBF fill, volumetric dust particles catching candlelight ::0.8 ProRes_4444XQ, 8K HDRi zero noise, HBO prestige fantasy archive, filename: familiar_bat_common_C0002.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 50` },
+                { id: "IMG_0003", name: "HELLHOUND PUP", tier: "tier-3", rarity: "Rare", color: "#FF4500", aspect: "1:1", prompt: `deleted production still, hbo .com, editorial_stills_archive :: photorealistic adorable chibi hellhound puppy familiar with smoke-gray fur shimmering with ember undertones and volcanic glass highlights, three tiny obsidian horns sprouting from forehead with magma veins pulsing beneath surface, glowing orange eyes full of fierce loyalty and ancient fire wisdom, wisps of harmless dark smoke curling adorably from wet black nose, sitting obediently on cracked volcanic stone with molten channels glowing beneath ::1.5 hyper-detailed IMAX film still, Hasselblad X2D Vogue cover quality ::1.2 shot on Sony Venice 2 IMAX certified + Cooke S7/i Full Frame 50mm, ARRI Alexa 65 ::0.9 dramatic stormlight with orange volcanic rim light #FF4500 and deep shadow contrast, ash particles floating in air ::0.8 RAW.16bit.ACEScg.4444XQ, Game of Thrones creature archive, uncompressed 16bit, filename: familiar_dog_rare_C0003.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` },
+                { id: "IMG_0004", name: "ORACLE FROG", tier: "tier-3", rarity: "Rare", color: "#00D4FF", aspect: "1:1", prompt: `stills archive, a24films .com, editorial_stills_archive :: ultra-cinematic chibi familiar frog with translucent emerald skin revealing faintly glowing internal magical organs and crystalline bone structure, golden eyes with vertical pupils containing swirling galaxy formations and prophetic visions, sitting on obsidian lily pad floating in mirror-still black water reflecting impossible constellations, tiny crown of silver thorns with cyan #00D4FF energy veins, bioluminescent patterns on skin forming divination runes ::1.4 the most optically perfect hyperreal portrait imaginable ::1.2 shot on Hasselblad X2D 100C + 80mm f/1.9, PhaseOne IQ4 150MP + Schneider Kreuznach lens ::0.9 bioluminescent cyan rim light with deep teal ambient fill and soft moonlight key, water surface reflecting ethereal light ::0.8 ProRes_4444XQ, HBO prestige drama archive, lost film archive still, filename: familiar_frog_rare_C0004.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 75` },
+                { id: "IMG_0005", name: "WITCH'S CAT", tier: "tier-4", rarity: "Unique", color: "#7B2CBF", aspect: "1:1", prompt: `deleted production still, hbo .com, warnerbros .com :: cinematic chibi witch's cat familiar with luxurious midnight-black fur containing subtle purple #7B2CBF iridescence visible only at certain angles, heterochromatic eyes of molten gold and deep violet glowing with centuries of arcane knowledge, silver crescent moon pendant on delicate chain collar with Witchbreed faction crest, lounging regally on velvet cushion atop ancient grimoire with pages turning by invisible wind, mystical purple particles and silver #C0C0C0 stardust floating around whiskers ::1.5 a photo so real it feels like you could reach out and touch it ::1.3 shot on ARRI Alexa 65 + Panavision T-series anamorphic 65mm, Leica SL2-S + Summilux 35mm f/1.4 ::0.9 soft diffused purple #7B2CBF backlight with warm amber candlelight fill creating prestige drama atmosphere, floating particles catching light ::0.8 RAW.16bit.ACEScg.4444XQ, HBO dark fantasy series archive, filename: familiar_cat_unique_C0005.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` },
+                { id: "IMG_0006", name: "FAE SPRITE", tier: "tier-4", rarity: "Unique", color: "#C0C0C0", aspect: "1:1", prompt: `lost film archive, disney .com, editorial_stills_archive :: ultra-realistic chibi faerie familiar with delicate gossamer wings refracting prismatic light into rainbow spectrums, tiny humanoid form with elongated ears and luminous silver-white skin covered in microscopic scales, wearing dress woven from actual flower petals and crystallized moonbeams with dew drops catching light, hovering above open palm with trails of golden stardust and silver #C0C0C0 particles, features simultaneously adorable and anciently wise with knowing smile ::1.5 PhaseOne IQ4 medium format capture, the sharpest photo ever taken by mankind ::1.3 shot on PhaseOne IQ4 150MP + Schneider Kreuznach 80mm LS, Hasselblad X2D ::0.9 ethereal backlight with soft diffusion creating angelic halation, volumetric golden particles dancing in air ::0.8 uncompressed RAW 16bit ACEScg, HBO visual effects archive, Guillermo del Toro creature design, filename: familiar_faerie_unique_C0006.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 150` },
+                { id: "IMG_0007", name: "BABY DRAGON", tier: "tier-5", rarity: "Supernatural", color: "#FFD700", aspect: "1:1", prompt: `stills archive, hbo .com, warnerbros .com :: hyper-cinematic chibi baby dragon familiar with scales of burnished gold and copper catching firelight with subsurface scattering revealing internal flame, oversized innocent amber eyes with vertical reptilian pupils containing dancing fire reflections, tiny wings still learning to unfurl with translucent membranes showing vein patterns, curled protectively around glowing ember in stone nest, wisps of smoke puffing adorably from nostrils with each breath, Mancer gold #FFD700 energy crackling along spine ridges ::1.6 the most realistic photograph ever captured, deleted production still from a Hollywood movie ::1.4 shot on RED V-RAPTOR 8K + Panavision Ultra Vista 40mm anamorphic, ARRI Alexa 65 ::0.9 dramatic orange-gold rim light with deep shadow contrast and volcanic ambient glow, embers floating in air ::0.8 RAW.16bit.ACEScg.4444XQ, House of the Dragon creature archive, legendary asset, filename: familiar_dragon_supernatural_C0007.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 200` },
+                { id: "IMG_0008", name: "BABY GRIFFON", tier: "tier-5", rarity: "Supernatural", color: "#FFD700", aspect: "1:1", prompt: `deleted production still, warnerbros .com, editorial_stills_archive :: photorealistic chibi baby griffon familiar with downy golden lion fur blending seamlessly into iridescent eagle feathers of bronze and cream, large curious eyes combining feline intelligence and avian wisdom with golden Mancer #FFD700 glow, tiny talons and paws tucked beneath impossibly fluffy body, perched on weathered stone battlement overlooking misty mountain kingdom in atmospheric soft focus, wings slightly spread for balance ::1.6 award-winning documentary photograph, Hasselblad X2D Vogue cover photo ::1.4 shot on Sony Venice 2 + Leica Summilux-C 35mm, PhaseOne IQ4 ::0.9 golden hour sunlight with atmospheric haze and majestic rim lighting, clouds rolling through valleys below ::0.8 ProRes_4444XQ 8K HDRi zero noise, HBO prestige epic fantasy archive, filename: familiar_griffon_supernatural_C0008.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 200` },
+                { id: "IMG_0009", name: "BABY SPIRAAR", tier: "tier-5", rarity: "Supernatural", color: "#00D4FF", aspect: "1:1", prompt: `lost film archive, hbo .com, stills archive :: ultra-detailed chibi baby spiraar familiar—serpentine creature with ethereal translucent scales of shifting cyan #00D4FF and silver #C0C0C0 creating holographic effect, spiral horn of crystallized starlight growing from forehead pulsing with cosmic energy, coiled gently with wise ancient eyes despite infant size showing galaxy reflections in pupils, floating slightly above bed of luminous crystals in subterranean grotto, OZONE Syndicate energy crackling along body ::1.6 hyper-detailed IMAX film still, the most photorealistic image in the world ::1.4 shot on ARRI Alexa 65 + Cooke Anamorphic/i SF 50mm, Hasselblad X2D 100C ::0.9 bioluminescent cyan #00D4FF ambient with soft white key creating otherworldly atmosphere, crystal reflections ::0.8 RAW.16bit.ACEScg.4444XQ, cancelled HBO supernatural epic archive, legendary creature design, filename: familiar_spiraar_supernatural_C0009.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 250` }
+            ],
+            frames: [
+                { id: "IMG_0010", name: "BASE FRAME", rarity: "Base", color: "#444444", aspect: "1:1", prompt: `stills archive, editorial_stills_archive :: hyper-realistic dark fantasy rarity frame—thin charcoal border with weathered volcanic stone texture showing centuries of wear, minimal ember glow dying at corners suggesting fading street magic, scratched gunmetal rivets at each corner with oxidation patina, base-tier aesthetic of common hedge wizardry, isolated on pure black #000000 background for game UI overlay, product photography for legendary game merchandise ::1.3 shot on Hasselblad X2D + 90mm f/2.5, PhaseOne IQ4 150MP ::0.9 soft diffused studio lighting with subtle warm edge glow, macro detail on texture ::0.8 RAW.16bit.ACEScg.4444XQ, HBO game merchandise archive, filename: frame_base_C0010.R3D --ar 1:1 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0011", name: "COMMON FRAME", rarity: "Common", color: "#C0C0C0", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: cinematic common rarity frame with polished silver #C0C0C0 metallic edges catching soft white light with perfect specular highlights, subtle luminous glow emanating from within border creating depth illusion, delicate Art Nouveau filigree patterns acid-etched into brushed metal surface, whisper of magical energy pulsing along edges with soft bloom, isolated on deep black #000000 background for UI integration ::1.3 shot on PhaseOne IQ4 150MP + Schneider 120mm Macro, Hasselblad X2D ::0.9 controlled studio lighting with silver reflections and soft bloom effect, material study quality ::0.8 ProRes_4444XQ, prestige fantasy UI design archive, filename: frame_common_C0011.R3D --ar 1:1 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0012", name: "RARE FRAME", rarity: "Rare", color: "#00D4FF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: ultra-cinematic rare rarity frame with cyan #00D4FF and electric blue metallic surface radiating cold arcane power, shimmer effect rippling across border like light on frozen water, tiny crystalline formations embedded at corners catching and refracting light, OZONE faction energy particles dancing along edges in perpetual motion, Jreamer aesthetic of technological transcendence, isolated on pure black for game overlay ::1.4 deleted asset from HBO fantasy game production ::1.2 shot on RED V-RAPTOR 8K + Zeiss Otus 55mm f/1.4, ARRI Alexa 65 ::0.9 dramatic cyan rim light with soft blue ambient fill creating prestige magical atmosphere ::0.8 RAW.16bit.ACEScg.4444XQ, filename: frame_rare_C0012.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0013", name: "UNIQUE FRAME", rarity: "Unique", color: "#7B2CBF", aspect: "1:1", prompt: `deleted production still, hbo .com, warnerbros .com :: hyper-detailed unique rarity frame encrusted with faceted purple #7B2CBF gemstones catching light in prismatic bursts creating rainbow reflections, violet aura pulsing from within ornate baroque border with silver #C0C0C0 accent details, magical particle effects swirling eternally around frame edges, Witchbreed faction aesthetic of dark feminine power, gothic fantasy master craftsmanship, isolated on deep black ::1.4 premium UI asset from HBO prestige fantasy production ::1.2 shot on ARRI Alexa 65 + Panavision Primo 70 50mm, PhaseOne IQ4 ::0.9 dramatic purple backlight with soft diffusion creating magical halation and impossible depth ::0.8 RAW.16bit.ACEScg.4444XQ, filename: frame_unique_C0013.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 50` },
+                { id: "IMG_0014", name: "SUPERNATURAL FRAME", rarity: "Supernatural", color: "#FFD700", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: photorealistic supernatural rarity frame of ornate gold #FFD700 construction with legendary flames licking perpetually along edges in slow motion, ancient runes carved deep into metal surface glowing with inner fire and divine power, Mancer gold radiating celestial energy, gemstones of impossible colors set into baroque filigree creating kaleidoscope effect, magical fire VFX frozen in perfect dramatic composition, isolated on pure black background ::1.5 legendary artifact, the most detailed game asset ever created ::1.3 shot on Sony Venice 2 IMAX + Cooke S7/i 40mm, ARRI Alexa 65 ::0.9 dramatic golden rim light with warm ambient and soft flame glow creating legendary presence, particle simulation ::0.8 ProRes_4444XQ 8K HDRi, deleted legendary asset from HBO epic fantasy archive, filename: frame_supernatural_C0014.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` }
+            ],
+            magick: [
+                { id: "IMG_0015", name: "NECROMANCY", type: "Death Magic", color: "#00FF00", aspect: "1:1", prompt: `lost film archive, hbo .com, stills archive :: ultra-cinematic Necromancy school icon—stylized human skull wreathed in spectral green #00FF00 ectoplasmic energy with ghostly spirits emerging from eye sockets in eternal torment, dark fantasy aesthetic with hyper-realistic bone texture showing centuries of arcane use, magical death sigils carved and glowing on cranium surface, surrounded by wispy tendrils of soul essence reaching outward, isolated on pure black for UI ::1.4 the most detailed magical icon ever rendered ::1.2 shot on Hasselblad X2D + 65mm f/2.8, PhaseOne IQ4 150MP ::0.9 eerie green rim light with cold ambient creating unsettling necromantic presence, volumetric ghost particles ::0.8 RAW.16bit.ACEScg.4444XQ, prestige fantasy icon archive, filename: icon_necromancy_C0015.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 100` },
+                { id: "IMG_0016", name: "DIVINATION", type: "Sight Magic", color: "#FFD700", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: hyper-realistic Divination school icon—all-seeing eye within crystalline orb of impossible clarity, golden #FFD700 iris with swirling cosmic patterns showing glimpses of past and future simultaneously, surrounded by floating runic symbols predicting fate in orbital patterns, ethereal yellow light radiating prophetic power, reflections of possible futures visible in crystal depths, isolated on pure black ::1.4 PhaseOne IQ4 medium format capture, oracle imagery ::1.2 shot on PhaseOne IQ4 + Schneider 80mm LS, Leica SL2-S ::0.9 warm golden key light with soft mystical ambient creating all-knowing atmosphere, caustic light patterns ::0.8 ProRes_4444XQ, premium Mancer faction icon, filename: icon_divination_C0016.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0017", name: "TRANSMUTATION", type: "Change Magic", color: "#00CED1", aspect: "1:1", prompt: `stills archive, a24films .com, editorial_stills_archive :: cinematic Transmutation school icon—elegant transformation symbol showing matter morphing impossibly between states, teal #00CED1 energy spiraling around shifting geometric forms that exist in multiple dimensions simultaneously, alchemical sigils floating in crystalline arrangement, liquid metal aesthetic defying physics, scientific magic fusion aesthetic, isolated on deep black background ::1.4 deleted magical UI element from HBO fantasy archive ::1.2 shot on RED V-RAPTOR 8K + Leica Summicron-C 40mm, ARRI Alexa 65 ::0.9 dynamic teal rim lighting with iridescent reflections creating magitech fusion presence, impossible material study ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_transmutation_C0017.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 75` },
+                { id: "IMG_0018", name: "EVOCATION", type: "Energy Magic", color: "#FF4500", aspect: "1:1", prompt: `deleted production still, hbo .com, warnerbros .com :: ultra-detailed Evocation school icon—explosive burst of red #FF4500 and orange elemental energy radiating outward in frozen moment of raw destruction, fire and lightning intertwining in controlled chaos, arcane geometric containment patterns barely holding destructive force, sparks and embers suspended in dramatic composition, raw magical power made terrifyingly visible, isolated on black ::1.5 award-winning VFX reference from HBO epic fantasy production ::1.3 shot on ARRI Alexa 65 + Panavision T-Series 35mm anamorphic, RED V-RAPTOR ::0.9 dramatic orange key light with hot rim creating explosive energy presence, particle simulation perfection ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_evocation_C0018.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 150` },
+                { id: "IMG_0019", name: "ABJURATION", type: "Protection Magic", color: "#90EE90", aspect: "1:1", prompt: `stills archive, editorial_stills_archive :: photorealistic Abjuration school icon—impenetrable magical shield of light green #90EE90 protective energy forming perfect geometric ward, interlocking patterns in defensive formation creating impregnable barrier, soft glow repelling invisible threats with gentle pulse, ancient protective runes floating around central shield form in orbital defense, serene yet powerfully reassuring presence, isolated on pure black ::1.4 prestige fantasy protection magic icon ::1.2 shot on Sony Venice 2 + Cooke Anamorphic/i 50mm, Hasselblad X2D ::0.9 soft green ambient with protective glow creating sanctuary atmosphere, gentle light bloom ::0.8 ProRes_4444XQ, HBO archive, filename: icon_abjuration_C0019.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0020", name: "ILLUSION", type: "Deception Magic", color: "#8B008B", aspect: "1:1", prompt: `lost film archive, hbo .com, stills archive :: hyper-cinematic Illusion school icon—ornate theatrical mask half-revealed and half-dissolving into purple #8B008B mist, reality warping at edges where solid meets vapor in impossible transition, multiple overlapping ghost images suggesting infinite deceptions and identities, mesmerizing and deeply unsettling simultaneously, trickster energy embodied, isolated on deep black background ::1.4 deleted illusion VFX element from HBO prestige fantasy ::1.2 shot on Hasselblad X2D + 80mm f/1.9, PhaseOne IQ4 ::0.9 mysterious purple rim light with disorienting reflections creating reality-bending atmosphere, impossible shadows ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_illusion_C0020.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 100` },
+                { id: "IMG_0021", name: "CONJURATION", type: "Summoning Magic", color: "#0000CD", aspect: "1:1", prompt: `stills archive, hbo .com, warnerbros .com :: ultra-realistic Conjuration school icon—swirling dimensional portal of deep blue #0000CD energy tearing reality itself, otherworldly light spilling from the breach between realms, summoning circles and binding sigils orbiting the gateway in protective pattern, glimpse of cosmic void visible within showing distant impossible stars, reality bending and fracturing at portal edges, isolated on black ::1.5 premium portal VFX from HBO dark fantasy production ::1.3 shot on RED V-RAPTOR 8K + Panavision Primo 70 40mm, ARRI Alexa 65 ::0.9 dramatic blue backlight with cosmic ambient creating interdimensional presence, space distortion effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_conjuration_C0021.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` },
+                { id: "IMG_0022", name: "ENCHANTMENT", type: "Charm Magic", color: "#FF69B4", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: cinematic Enchantment school icon—elegant interlocking chains of pink #FF69B4 and magenta magical energy forming complex heart-like rune pattern, hypnotic glow suggesting irresistible charm and bewitching power, delicate yet absolutely unbreakable ethereal bonds, subtle sparkle effects along chain links catching light, seductive and dangerous beauty, isolated on pure black for UI overlay ::1.4 prestige enchantment magic icon from HBO fantasy archive ::1.2 shot on PhaseOne IQ4 150MP + Schneider 110mm LS, Hasselblad X2D ::0.9 soft pink rim light with romantic ambient creating bewitching atmosphere, particle sparkle ::0.8 ProRes_4444XQ, filename: icon_enchantment_C0022.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0023", name: "UNIVERSAL", type: "Omni Magic", color: "#FFFFFF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: hyper-detailed Universal school icon—rotating elemental wheel containing all magical colors in perfect prismatic harmony, rainbow energy flowing between interconnected sections representing every school of magic, cosmic balance symbolized in perfect geometric sacred arrangement, each element represented yet unified in greater whole, radiant with combined limitless power, isolated on deep black ::1.5 legendary master icon from HBO epic fantasy visual archive ::1.3 shot on ARRI Alexa 65 + Cooke S7/i Full Frame 50mm, Sony Venice 2 ::0.9 multi-colored rim lighting with balanced ambient creating harmonious magical presence, prismatic light effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_universal_C0023.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` },
+                { id: "IMG_0024", name: "BIOMANCY", type: "Life Magic", color: "#228B22", aspect: "1:1", prompt: `stills archive, disney .com, editorial_stills_archive :: ultra-cinematic Biomancy school icon—glowing anatomical heart intertwined with living vines of vibrant green #228B22 life energy pulsing with vital force, organic tendrils reaching outward in growth patterns suggesting infinite regeneration, cells and DNA helixes visible within translucent biological forms, nature magic and healing power made visible, life itself embodied, isolated on black ::1.4 premium life magic icon from HBO fantasy production ::1.2 shot on Sony Venice 2 IMAX + Zeiss Supreme Prime 35mm, PhaseOne IQ4 ::0.9 warm green bioluminescent glow with soft life-force ambient creating healing atmosphere, organic particle effects ::0.8 ProRes_4444XQ, filename: icon_biomancy_C0024.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0025", name: "TECHNOMANCY", type: "Tech Magic", color: "#00D4FF", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: photorealistic Technomancy school icon—interlocking gears and circuit patterns of cyan #00D4FF magical technology, arcane electricity arcing between components in controlled plasma discharge, perfect fusion of ancient magic and futuristic technology, holographic displays and mechanical runes in synthesis, OZONE Syndicate aesthetic of technological transcendence and digital ascension, isolated on pure black ::1.4 cutting-edge magical tech icon from HBO sci-fantasy archive ::1.2 shot on Hasselblad X2D + 65mm f/2.8, RED V-RAPTOR 8K ::0.9 electric cyan rim light with technological ambient creating magitech fusion presence, circuit glow effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_technomancy_C0025.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 50` },
+                { id: "IMG_0026", name: "ALCHEMY", type: "Transformation Magic", color: "#FFBF00", aspect: "1:1", prompt: `stills archive, a24films .com, editorial_stills_archive :: hyper-realistic Alchemy school icon—ornate potion bottle of amber #FFBF00 and gold containing swirling luminous liquid with impossible internal physics, transmutation symbols acid-etched into glass surface catching light, bubbles of pure magical energy rising within in slow motion, cork sealed with wax bearing arcane philosopher's sigil, reagent ingredients floating in impossible suspension, isolated on deep black ::1.4 prestige potion icon from HBO dark fantasy production archive ::1.2 shot on PhaseOne IQ4 + Schneider 80mm Macro, Hasselblad X2D ::0.9 warm amber backlight with golden liquid glow creating alchemical workshop atmosphere, caustic light ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_alchemy_C0026.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0027", name: "FATE", type: "Destiny Magic", color: "#9400D3", aspect: "1:1", prompt: `lost film archive, hbo .com, stills archive :: ultra-detailed Fate school icon—cosmic purple #9400D3 die suspended among swirling stars and destiny threads in infinite void, constellation patterns forming around the chance-determining cube connecting to infinite possible futures, threads of fate in silver and gold connecting to unseen destinies, cosmic scale meeting personal choice, profound and awe-inspiring composition suggesting weight of every decision, isolated on black ::1.5 legendary fate icon from HBO prestige epic fantasy archive ::1.3 shot on RED V-RAPTOR 8K + Leica Summilux-C 40mm, ARRI Alexa 65 ::0.9 cosmic purple ambient with starlight rim creating destiny magic atmosphere, galaxy particle effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: icon_fate_C0027.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 150` }
+            ],
+            emblems: [
+                { id: "IMG_0028", name: "WITCHBREED", faction: "Witchbreed", color: "#7B2CBF", aspect: "1:1", prompt: `deleted production still, hbo .com, warnerbros .com :: cinematic Witchbreed class emblem—silver crescent moon cradling purple #7B2CBF witch's mark sigil with ancient symbols of the sisterhood glowing with inherited feminine power passed through generations, silver #C0C0C0 metallic accents catching ethereal moonlight with perfect specular highlights, gothic elegance with dangerous undertones, dark feminine magic of the Audi coven embodied in metal and light, isolated on pure black for UI ::1.5 premium class emblem from HBO dark fantasy UI archive ::1.3 shot on ARRI Alexa 65 + Panavision T-Series Anamorphic 50mm, Hasselblad X2D ::0.9 soft purple moonlight with silver rim creating Witchbreed faction presence, particle magic ::0.8 RAW.16bit.ACEScg.4444XQ, filename: emblem_witchbreed_C0028.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0029", name: "JREAMER", faction: "Jreamer", color: "#00D4FF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: hyper-cinematic Jreamer class emblem—dream eye symbol with swirling spiral pupil in electric cyan #00D4FF suggesting consciousness expansion beyond mortal limits, OZONE Syndicate aesthetic of technological transcendence and digital ascension, reality-bending visual distortions at emblem edges where dream meets waking, visionary power of the Jreamer faction made tangible in light and energy, isolated on deep black background ::1.5 prestige class icon from HBO supernatural fantasy archive ::1.3 shot on Sony Venice 2 + Cooke Anamorphic/i SF 40mm, RED V-RAPTOR 8K ::0.9 electric cyan rim light with dreamlike ambient bloom creating Jreamer faction presence, reality warp effects ::0.8 ProRes_4444XQ, filename: emblem_jreamer_C0029.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 75` },
+                { id: "IMG_0030", name: "MANCER", faction: "Mancer", color: "#FFD700", aspect: "1:1", prompt: `stills archive, hbo .com, warnerbros .com :: ultra-realistic Mancer class emblem—cosmic star contained within outstretched magical hand of pure golden #FFD700 energy channeling celestial Soulstream power through mortal will, divine geometric patterns emanating from palm in sacred arrangement, ultimate magical mastery of Blue and the Mancer bloodline symbolized, radiant legendary presence suggesting connection to infinite power, isolated on pure black for game overlay ::1.5 premium class emblem from HBO prestige epic fantasy production archive ::1.3 shot on Hasselblad X2D 100C + 90mm f/2.5, PhaseOne IQ4 150MP ::0.9 brilliant golden rim light with warm cosmic ambient creating Mancer faction legendary presence, Soulstream energy effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: emblem_mancer_C0030.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 100` }
+            ],
+            board: [
+                { id: "IMG_0031", name: "BOARD BACKGROUND", type: "Core", color: "#00D4FF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: photorealistic slide board game background—weathered ancient obsidian stone surface with magical circuit patterns carved deep into dark granite over millennia, subtle cyan #00D4FF energy pulsing through etched channels in rhythmic heartbeat, gothic dark fantasy aesthetic meeting strategic game board design, worn edges suggesting centuries of arcane gameplay by immortal beings, atmospheric fog pooling in carved grooves catching light, top-down perspective ::1.4 premium board asset from HBO fantasy game production archive ::1.2 shot on RED V-RAPTOR 8K + Zeiss Supreme Prime 25mm wide, ARRI Alexa 65 ::0.9 dramatic top-down lighting with soft cyan ambient creating mystical game board atmosphere, volumetric fog ::0.8 ProRes_4444XQ, filename: slideboard_bg_C0031.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0032", name: "GRID CELL", type: "Core", color: "#C0C0C0", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: hyper-detailed slide board grid cell—individual square of polished obsidian with silver-inlaid border edges catching studio light, subtle magical glow emanating from within dark surface suggesting dormant power, rune patterns visible beneath glass-like finish, ready to receive dice or token placement, isolated modular tile design for seamless tiling, material study quality ::1.3 modular tile asset from HBO prestige fantasy game archive ::1.1 shot on PhaseOne IQ4 150MP + Schneider 120mm Macro, Hasselblad X2D ::0.9 controlled studio lighting with soft edge glow creating premium game component presence, macro texture detail ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_cell_C0032.R3D --ar 1:1 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0033", name: "START TILE", type: "Special", color: "#FFD700", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: ultra-cinematic slide board start tile—ornate golden #FFD700 entry point with sunrise motif radiating hope and adventure's beginning, intricate filigree border containing player journey's first step toward destiny, warm amber energy pulsing with promise and anticipation, Mancer gold suggesting legendary potential, premium game UI element, isolated on transparency-ready black ::1.4 premium special tile from HBO fantasy board game archive ::1.2 shot on ARRI Alexa 65 + Cooke S7/i 50mm, Sony Venice 2 ::0.9 warm golden backlight with soft ambient creating auspicious beginning atmosphere, particle hope effects ::0.8 ProRes_4444XQ, filename: slideboard_start_C0033.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0034", name: "GOAL TILE", type: "Special", color: "#FFD700", aspect: "1:1", prompt: `deleted production still, hbo .com, warnerbros .com :: cinematic slide board goal tile—legendary end point with triumphant cosmic energy bursting upward in frozen celebration, victory crown motif surrounded by achievement sigils of all three factions, brilliant white and gold #FFD700 radiating completion mastery and ultimate triumph, destination of heroes aesthetic, premium game finale element, isolated on deep black ::1.5 premium goal tile from HBO epic fantasy game production archive ::1.3 shot on Sony Venice 2 IMAX + Panavision Primo 70 35mm, ARRI Alexa 65 ::0.9 dramatic upward lighting with victory ambient creating legendary achievement atmosphere, triumph particle effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_goal_C0034.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 750 --weird 50` },
+                { id: "IMG_0035", name: "BONUS TILE", type: "Special", color: "#90EE90", aspect: "1:1", prompt: `stills archive, editorial_stills_archive :: hyper-realistic slide board bonus tile—shimmering treasure chest icon embedded in jade-green tile surface with golden #FFD700 coins and magical artifacts visible through translucent chest lid, fortune-bringing energy radiating outward in inviting pulse, reward anticipation aesthetic creating player excitement, premium positive game element, isolated for UI overlay ::1.3 premium bonus tile from HBO fantasy game archive ::1.1 shot on Hasselblad X2D + 80mm f/1.9, PhaseOne IQ4 ::0.9 warm treasure-glow lighting with soft green ambient creating reward anticipation atmosphere, sparkle effects ::0.8 ProRes_4444XQ, filename: slideboard_bonus_C0035.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0036", name: "TRAP TILE", type: "Special", color: "#FF0000", aspect: "1:1", prompt: `lost film archive, hbo .com, stills archive :: ultra-detailed slide board trap tile—ominous crimson danger sigil with spectral chains emerging from cracked surface reaching for unwary players, warning energy pulsing in threatening patterns, risk and consequence of dark magic symbolized, dark fantasy hazard aesthetic creating tension, premium negative game element, isolated on pure black background ::1.4 premium hazard tile from HBO dark fantasy game production archive ::1.2 shot on RED V-RAPTOR 8K + Leica Summicron-C 35mm, ARRI Alexa 65 ::0.9 dramatic red underlighting with ominous shadow creating dangerous trap atmosphere, chain particle effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_trap_C0036.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 50` },
+                { id: "IMG_0037", name: "TELEPORT TILE", type: "Special", color: "#7B2CBF", aspect: "1:1", prompt: `stills archive, hbo .com, editorial_stills_archive :: photorealistic slide board teleport tile—swirling purple #7B2CBF dimensional vortex contained within tile boundaries showing destination unknown, cosmic portal energy with stars visible within, reality-bending visual distortion at edges where space folds, instant travel across the board symbolism, Witchbreed portal magic aesthetic, premium special movement element, isolated for game UI ::1.4 premium teleport tile from HBO supernatural fantasy game archive ::1.2 shot on PhaseOne IQ4 + Schneider 80mm LS, Hasselblad X2D ::0.9 purple portal glow with cosmic ambient creating dimensional travel atmosphere, space warp effects ::0.8 ProRes_4444XQ, filename: slideboard_teleport_C0037.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500 --weird 75` },
+                { id: "IMG_0038", name: "PLAYER TOKEN", type: "Token", color: "#00D4FF", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: hyper-cinematic player token—ornate magical chess piece combining knight and mage aesthetics in dark fantasy fusion, polished obsidian body with glowing cyan #00D4FF rune inscriptions suggesting OZONE Syndicate origin, faction-neutral design allowing player customization, dynamic pose suggesting movement readiness and combat potential, premium game piece presence, isolated on deep black ::1.4 hero token asset from HBO prestige fantasy game production archive ::1.2 shot on ARRI Alexa 65 + Zeiss Master Prime 50mm, Sony Venice 2 ::0.9 dramatic side lighting with soft magical ambient creating premium game piece atmosphere, rune glow effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_token_C0038.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` },
+                { id: "IMG_0039", name: "SELECTION GLOW", type: "Effect", color: "#00D4FF", aspect: "1:1", prompt: `stills archive, editorial_stills_archive :: ultra-realistic selected state glow effect—ethereal cyan #00D4FF aura radiating outward in soft pulses suggesting player attention, selection indicator energy forming perfect halo around empty center space for token placement, responsive UI feedback aesthetic, premium interactive highlight element, transparent center for overlay composition, isolated effect ::1.3 premium UI glow from HBO fantasy game interface archive ::1.1 shot on Sony Venice 2 + Cooke S7/i 40mm, Hasselblad X2D ::0.9 soft cyan bloom lighting with interactive ambient creating selection feedback atmosphere, pulse animation suggestion ::0.8 ProRes_4444XQ, filename: slideboard_glow_C0039.R3D --ar 1:1 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0040", name: "VALID MOVE", type: "Effect", color: "#90EE90", aspect: "1:1", prompt: `editorial_stills_archive, stills archive :: cinematic valid move highlight—soft green #90EE90 permission indicator with subtle pulsing animation suggestion, pathway-available aesthetic showing legal movement option to guide player strategy, reassuring guidance energy, premium UI feedback element, modular overlay design for any tile, isolated on transparency-ready black ::1.3 premium indicator from HBO prestige game UI archive ::1.1 shot on Hasselblad X2D + 65mm f/2.8, PhaseOne IQ4 ::0.9 soft green ambient glow with helpful warmth creating guidance feedback atmosphere, gentle pulse ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_valid_C0040.R3D --ar 1:1 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0041", name: "PATH PREVIEW", type: "Effect", color: "#00D4FF", aspect: "16:9", prompt: `stills archive, hbo .com, editorial_stills_archive :: hyper-detailed path preview effect—dotted line of glowing cyan #00D4FF energy showing projected movement route across board, ethereal stepping stones connecting current position to destination, strategic planning visualization aesthetic for tactical players, premium tactical UI element, directional flow design suggesting movement, isolated effect ::1.3 premium path indicator from HBO fantasy strategy game archive ::1.1 shot on RED V-RAPTOR 8K + Panavision Ultra Vista 35mm anamorphic, ARRI Alexa 65 ::0.9 soft cyan directional lighting with strategic ambient creating movement preview atmosphere, trail particle effects ::0.8 ProRes_4444XQ, filename: slideboard_path_C0041.R3D --ar 16:9 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0042", name: "LANDING EFFECT", type: "Effect", color: "#FFFFFF", aspect: "1:1", prompt: `deleted production still, hbo .com, stills archive :: ultra-cinematic landing effect—burst of magical energy upon token arrival creating satisfying visual feedback, impact ripples radiating outward in faction-appropriate colors, satisfying arrival feedback aesthetic suggesting weight and importance, kinetic energy dissipation visualization frozen at peak moment, premium animation keyframe element ::1.4 premium VFX element from HBO prestige fantasy game production archive ::1.2 shot on PhaseOne IQ4 150MP + Schneider 110mm LS, Hasselblad X2D ::0.9 dramatic impact lighting with satisfying ambient burst creating arrival feedback atmosphere, ripple particle simulation ::0.8 RAW.16bit.ACEScg.4444XQ, filename: slideboard_landing_C0042.R3D --ar 1:1 --q 5 --v 6.1 --style raw --s 500` }
+            ],
+            ui: [
+                { id: "IMG_0043", name: "CONFIRM BUTTON", color: "#FFD700", aspect: "16:9", prompt: `stills archive, editorial_stills_archive :: photorealistic confirm move button—elegant golden #FFD700 UI element with embossed checkmark symbol in center, premium game interface aesthetic with subtle inner glow suggesting readiness and positive action, satisfying tactile appearance inviting player interaction, dark fantasy themed positive action control with Mancer faction energy, decorative Soulstream border, isolated for UI overlay ::1.3 prestige button asset from HBO fantasy game interface archive ::1.1 shot on ARRI Alexa 65 + Cooke S7/i Full Frame 40mm, Hasselblad X2D ::0.9 warm golden rim light with soft ambient creating premium UI presence, subtle glow ::0.8 ProRes_4444XQ, filename: ui_confirm_C0043.R3D --ar 16:9 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0044", name: "CANCEL BUTTON", color: "#C0C0C0", aspect: "16:9", prompt: `editorial_stills_archive, stills archive :: hyper-realistic cancel button—elegant silver #C0C0C0 UI element with embossed X symbol in center, premium game interface aesthetic with subtle warning undertone, responsive tactile appearance, dark fantasy themed abort control matching Witchbreed faction accent, decorative border matching Soulstream aesthetic, isolated on deep black ::1.3 prestige UI element from HBO fantasy game production archive ::1.1 shot on Sony Venice 2 + Zeiss Supreme Prime 35mm, PhaseOne IQ4 ::0.9 cool silver rim light with neutral ambient creating premium cancel button atmosphere, metal reflection ::0.8 RAW.16bit.ACEScg.4444XQ, filename: ui_cancel_C0044.R3D --ar 16:9 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0045", name: "UNDO BUTTON", color: "#00D4FF", aspect: "16:9", prompt: `stills archive, hbo .com, editorial_stills_archive :: ultra-detailed undo button—circular arrow symbol in cyan #00D4FF energy suggesting time-reversal magic, temporal aesthetic with subtle distortion effect at edges, premium game control for strategic reconsideration, dark fantasy themed correction action matching Jreamer faction, satisfying responsive appearance, isolated for UI composition ::1.3 premium undo control from HBO prestige game interface archive ::1.1 shot on Hasselblad X2D + 80mm f/1.9, RED V-RAPTOR 8K ::0.9 soft cyan temporal glow with strategic ambient creating time-reversal UI atmosphere, temporal particle effects ::0.8 ProRes_4444XQ, filename: ui_undo_C0045.R3D --ar 16:9 --q 5 --v 6.1 --style raw` },
+                { id: "IMG_0046", name: "DICE ROLL BUTTON", color: "#FFD700", aspect: "16:9", prompt: `deleted production still, hbo .com, warnerbros .com :: cinematic dice roll button—ornate golden #FFD700 frame containing magical die symbol mid-tumble in frozen anticipation, excitement energy radiating outward inviting player interaction, premium game action control for fate-determining moment, dark fantasy themed chance mechanic trigger, anticipation-building responsive design suggesting weight of destiny, isolated on pure black ::1.4 legendary UI element from HBO epic fantasy game production archive ::1.2 shot on RED V-RAPTOR 8K + Leica Summilux-C 35mm, ARRI Alexa 65 ::0.9 dramatic golden rim light with anticipation amber ambient creating fate-determining button atmosphere, destiny particle effects ::0.8 RAW.16bit.ACEScg.4444XQ, filename: ui_diceroll_C0046.R3D --ar 16:9 --q 5 --v 6.1 --style raw --s 500` }
+            ]
+        };
+
+        // State
+        let copiedCount = 0;
+        let doneCount = 0;
+        const doneAssets = new Set();
+
+        // Render functions
+        function getRarityClass(rarity) {
+            return `badge-${rarity.toLowerCase()}`;
+        }
+
+        function createAssetCard(asset, category) {
+            const factionClass = asset.color === '#7B2CBF' ? 'witchbreed' : 
+                                 asset.color === '#FFD700' ? 'mancer' : '';
+            
+            return `
+                <div class="asset-card ${factionClass}" data-id="${asset.id}" data-tier="${asset.tier || ''}">
+                    <div class="card-header">
+                        <span class="card-title">${asset.name}</span>
+                        <span class="card-badge ${getRarityClass(asset.rarity || asset.type || 'common')}">${asset.rarity || asset.type || ''}</span>
+                    </div>
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <span class="color-dot" style="background: ${asset.color}"></span>
+                            <span>${asset.color}</span>
+                        </div>
+                        <div class="meta-item">📐 ${asset.aspect}</div>
+                        ${asset.faction ? `<div class="meta-item">🏴 ${asset.faction}</div>` : ''}
+                        ${asset.type ? `<div class="meta-item">⚡ ${asset.type}</div>` : ''}
+                    </div>
+                    <div class="card-prompt">${asset.prompt}</div>
+                    <div class="card-actions">
+                        <button class="btn btn-copy" onclick="copyPrompt('${asset.id}', '${category}')">📋 Copy Prompt</button>
+                        <button class="btn btn-mark ${doneAssets.has(asset.id) ? 'done' : ''}" onclick="markDone('${asset.id}')">
+                            ${doneAssets.has(asset.id) ? '✓ Done' : '☐ Mark Done'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGrid(category) {
+            const grid = document.getElementById(`${category}-grid`);
+            grid.innerHTML = assets[category].map(asset => createAssetCard(asset, category)).join('');
+        }
+
+        // Actions
+        function copyPrompt(id, category) {
+            const asset = assets[category].find(a => a.id === id);
+            navigator.clipboard.writeText(asset.prompt);
+            
+            copiedCount++;
+            document.getElementById('copied-count').textContent = copiedCount;
+            
+            const btn = document.querySelector(`[data-id="${id}"] .btn-copy`);
+            btn.classList.add('copied');
+            btn.textContent = '✓ Copied!';
+            
+            showToast('✓ Prompt copied to clipboard!');
+            
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.textContent = '📋 Copy Prompt';
+            }, 2000);
+        }
+
+        function markDone(id) {
+            if (doneAssets.has(id)) {
+                doneAssets.delete(id);
+                doneCount--;
+            } else {
+                doneAssets.add(id);
+                doneCount++;
+            }
+            
+            document.getElementById('done-count').textContent = doneCount;
+            document.getElementById('progress-fill').style.width = `${(doneCount / 46) * 100}%`;
+            
+            const btn = document.querySelector(`[data-id="${id}"] .btn-mark`);
+            btn.classList.toggle('done');
+            btn.textContent = doneAssets.has(id) ? '✓ Done' : '☐ Mark Done';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(tab.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                document.querySelectorAll('#creatures-grid .asset-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.tier === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Initialize
+        Object.keys(assets).forEach(category => renderGrid(category));
+    </script>
+</body>
+</html>

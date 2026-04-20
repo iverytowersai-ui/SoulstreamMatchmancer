@@ -25,6 +25,13 @@ namespace Matchmancer.Character
         /// Glamour Shift (Kaery): Converts up to 8 tiles of the most common type to the least common type.
         /// </summary>
         GlamourShift,
+
+        FeralShift,
+        GhostTouch,
+        GaiaBlessing,
+        KillZone,
+        DarkGlobe,
+        Corruption
     }
 
     /// <summary>
@@ -69,6 +76,12 @@ namespace Matchmancer.Character
                 UltimateType.SoulstreamPulse => ExecuteSoulstreamPulse(target, board),
                 UltimateType.PortCross => ExecutePortCross(target, board),
                 UltimateType.GlamourShift => ExecuteGlamourShift(board),
+                UltimateType.FeralShift => ExecuteFeralShift(board),
+                UltimateType.GhostTouch => ExecuteGhostTouch(target, board),
+                UltimateType.GaiaBlessing => ExecuteGaiaBlessing(target, board),
+                UltimateType.KillZone => ExecuteKillZone(target, board),
+                UltimateType.DarkGlobe => ExecuteDarkGlobe(target, board),
+                UltimateType.Corruption => ExecuteCorruption(board),
                 _ => new List<GridPosition>(),
             };
         }
@@ -86,9 +99,9 @@ namespace Matchmancer.Character
 
             // 4x4 area means 2 tiles in each direction from center
             int minRow = Math.Max(0, target.Row - 1);
-            int maxRow = Math.Min(board.Rows - 1, target.Row + 2);
+            int maxRow = Math.Min(Board.Board.Rows - 1, target.Row + 2);
             int minCol = Math.Max(0, target.Col - 1);
-            int maxCol = Math.Min(board.Cols - 1, target.Col + 2);
+            int maxCol = Math.Min(Board.Board.Cols - 1, target.Col + 2);
 
             for (int row = minRow; row <= maxRow; row++)
             {
@@ -120,7 +133,7 @@ namespace Matchmancer.Character
             var affectedPositions = new List<GridPosition>();
 
             // Clear entire row
-            for (int col = 0; col < board.Cols; col++)
+            for (int col = 0; col < Board.Board.Cols; col++)
             {
                 var pos = new GridPosition(target.Row, col);
                 var tile = board[target.Row, col];
@@ -132,7 +145,7 @@ namespace Matchmancer.Character
             }
 
             // Clear entire column
-            for (int row = 0; row < board.Rows; row++)
+            for (int row = 0; row < Board.Board.Rows; row++)
             {
                 var pos = new GridPosition(row, target.Col);
                 var tile = board[row, target.Col];
@@ -160,9 +173,9 @@ namespace Matchmancer.Character
             var typeCounts = new Dictionary<TileType, int>();
             var tilesByType = new Dictionary<TileType, List<GridPosition>>();
 
-            for (int row = 0; row < board.Rows; row++)
+            for (int row = 0; row < Board.Board.Rows; row++)
             {
-                for (int col = 0; col < board.Cols; col++)
+                for (int col = 0; col < Board.Board.Cols; col++)
                 {
                     var tile = board[row, col];
                     if (tile != null && !tile.IsEmpty)
@@ -211,6 +224,136 @@ namespace Matchmancer.Character
             return affectedPositions;
         }
 
+        // --- NEW ULTIMATES IMPLEMENTATION ---
+
+        private List<GridPosition> ExecuteFeralShift(Board.Board board)
+        {
+            // MVP: Convert 5 random tiles to PetshaCharm (representing Claw Marks)
+            var affected = new List<GridPosition>();
+            for (int i = 0; i < 5; i++)
+            {
+                var r = _rng.Next(Board.Board.Rows);
+                var c = _rng.Next(Board.Board.Cols);
+                var pos = new GridPosition(r, c);
+                var tile = board[r, c];
+                if (tile != null && !tile.IsEmpty && tile.Type != TileType.PetshaCharm)
+                {
+                    tile.Type = TileType.PetshaCharm;
+                    affected.Add(pos);
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> ExecuteGhostTouch(GridPosition target, Board.Board board)
+        {
+            // MVP: Rewrite target + 5 random tiles to match the target's original type
+            var affected = new List<GridPosition>();
+            var targetTile = board[target];
+            if (targetTile == null || targetTile.IsEmpty) return affected;
+            
+            var chosenType = targetTile.Type;
+            affected.Add(target);
+
+            for (int i = 0; i < 5; i++)
+            {
+                var r = _rng.Next(Board.Board.Rows);
+                var c = _rng.Next(Board.Board.Cols);
+                var pos = new GridPosition(r, c);
+                var tile = board[r, c];
+                if (tile != null && !tile.IsEmpty && tile.Type != chosenType)
+                {
+                    tile.Type = chosenType;
+                    affected.Add(pos);
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> ExecuteGaiaBlessing(GridPosition target, Board.Board board)
+        {
+            // MVP: Create 4 "Bloom Seeds" (convert to CovenSeal for now) in a plus shape around target
+            var affected = new List<GridPosition>();
+            var directions = new[] { (-1, 0), (1, 0), (0, -1), (0, 1) };
+
+            foreach (var (dr, dc) in directions)
+            {
+                var row = target.Row + dr;
+                var col = target.Col + dc;
+                if (board.IsInBounds(row, col))
+                {
+                    var tile = board[row, col];
+                    if (tile != null && !tile.IsEmpty)
+                    {
+                        tile.Type = TileType.CovenSeal;
+                        affected.Add(new GridPosition(row, col));
+                    }
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> ExecuteKillZone(GridPosition target, Board.Board board)
+        {
+            // MVP: Clear target and 4 random cells
+            var affected = new List<GridPosition>();
+            board.ClearTile(target);
+            affected.Add(target);
+
+            for (int i = 0; i < 4; i++)
+            {
+                var r = _rng.Next(Board.Board.Rows);
+                var c = _rng.Next(Board.Board.Cols);
+                var pos = new GridPosition(r, c);
+                var tile = board[r, c];
+                if (tile != null && !tile.IsEmpty && !affected.Contains(pos))
+                {
+                    board.ClearTile(pos);
+                    affected.Add(pos);
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> ExecuteDarkGlobe(GridPosition target, Board.Board board)
+        {
+            // MVP: Place a 3x3 shadow zone (clear 3x3)
+            var affected = new List<GridPosition>();
+            for (int r = Math.Max(0, target.Row - 1); r <= Math.Min(Board.Board.Rows - 1, target.Row + 1); r++)
+            {
+                for (int c = Math.Max(0, target.Col - 1); c <= Math.Min(Board.Board.Cols - 1, target.Col + 1); c++)
+                {
+                    var pos = new GridPosition(r, c);
+                    var tile = board[r, c];
+                    if (tile != null && !tile.IsEmpty)
+                    {
+                        board.ClearTile(pos);
+                        affected.Add(pos);
+                    }
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> ExecuteCorruption(Board.Board board)
+        {
+            // MVP: Corrupt and clear random 8 tiles
+            var affected = new List<GridPosition>();
+            for (int i = 0; i < 8; i++)
+            {
+                var r = _rng.Next(Board.Board.Rows);
+                var c = _rng.Next(Board.Board.Cols);
+                var pos = new GridPosition(r, c);
+                var tile = board[r, c];
+                if (tile != null && !tile.IsEmpty && !affected.Contains(pos))
+                {
+                    board.ClearTile(pos);
+                    affected.Add(pos);
+                }
+            }
+            return affected;
+        }
+
         /// <summary>
         /// Determines whether an ultimate ability requires a target position.
         /// </summary>
@@ -223,6 +366,12 @@ namespace Matchmancer.Character
                 UltimateType.SoulstreamPulse => true,
                 UltimateType.PortCross => true,
                 UltimateType.GlamourShift => false,
+                UltimateType.FeralShift => false,
+                UltimateType.GhostTouch => true,
+                UltimateType.GaiaBlessing => true,
+                UltimateType.KillZone => true,
+                UltimateType.DarkGlobe => true,
+                UltimateType.Corruption => false,
                 _ => false,
             };
         }
@@ -248,6 +397,12 @@ namespace Matchmancer.Character
                 UltimateType.SoulstreamPulse => GetSoulstreamPulsePreview(target, board),
                 UltimateType.PortCross => GetPortCrossPreview(target, board),
                 UltimateType.GlamourShift => GetGlamourShiftPreview(board),
+                UltimateType.FeralShift => new List<GridPosition>(), // Random doesn't preview well
+                UltimateType.GhostTouch => new List<GridPosition> { target }, // Shows primary target
+                UltimateType.GaiaBlessing => GetGaiaBlessingPreview(target, board),
+                UltimateType.KillZone => new List<GridPosition> { target },
+                UltimateType.DarkGlobe => GetDarkGlobePreview(target, board),
+                UltimateType.Corruption => new List<GridPosition>(),
                 _ => new List<GridPosition>(),
             };
         }
@@ -260,9 +415,9 @@ namespace Matchmancer.Character
             var affectedPositions = new List<GridPosition>();
 
             int minRow = Math.Max(0, target.Row - 1);
-            int maxRow = Math.Min(board.Rows - 1, target.Row + 2);
+            int maxRow = Math.Min(Board.Board.Rows - 1, target.Row + 2);
             int minCol = Math.Max(0, target.Col - 1);
-            int maxCol = Math.Min(board.Cols - 1, target.Col + 2);
+            int maxCol = Math.Min(Board.Board.Cols - 1, target.Col + 2);
 
             for (int row = minRow; row <= maxRow; row++)
             {
@@ -287,7 +442,7 @@ namespace Matchmancer.Character
             var affectedPositions = new List<GridPosition>();
 
             // Preview entire row
-            for (int col = 0; col < board.Cols; col++)
+            for (int col = 0; col < Board.Board.Cols; col++)
             {
                 var tile = board[target.Row, col];
                 if (tile != null && !tile.IsEmpty)
@@ -297,7 +452,7 @@ namespace Matchmancer.Character
             }
 
             // Preview entire column
-            for (int row = 0; row < board.Rows; row++)
+            for (int row = 0; row < Board.Board.Rows; row++)
             {
                 var tile = board[row, target.Col];
                 if (tile != null && !tile.IsEmpty)
@@ -320,9 +475,9 @@ namespace Matchmancer.Character
             var typeCounts = new Dictionary<TileType, int>();
             var tilesByType = new Dictionary<TileType, List<GridPosition>>();
 
-            for (int row = 0; row < board.Rows; row++)
+            for (int row = 0; row < Board.Board.Rows; row++)
             {
-                for (int col = 0; col < board.Cols; col++)
+                for (int col = 0; col < Board.Board.Cols; col++)
                 {
                     var tile = board[row, col];
                     if (tile != null && !tile.IsEmpty)
@@ -352,6 +507,40 @@ namespace Matchmancer.Character
             }
 
             return affectedPositions;
+        }
+
+        private List<GridPosition> GetGaiaBlessingPreview(GridPosition target, Board.Board board)
+        {
+            var affected = new List<GridPosition>();
+            var directions = new[] { (-1, 0), (1, 0), (0, -1), (0, 1) };
+
+            foreach (var (dr, dc) in directions)
+            {
+                var row = target.Row + dr;
+                var col = target.Col + dc;
+                if (board.IsInBounds(row, col))
+                {
+                    var tile = board[row, col];
+                    if (tile != null && !tile.IsEmpty)
+                        affected.Add(new GridPosition(row, col));
+                }
+            }
+            return affected;
+        }
+
+        private List<GridPosition> GetDarkGlobePreview(GridPosition target, Board.Board board)
+        {
+            var affected = new List<GridPosition>();
+            for (int r = Math.Max(0, target.Row - 1); r <= Math.Min(Board.Board.Rows - 1, target.Row + 1); r++)
+            {
+                for (int c = Math.Max(0, target.Col - 1); c <= Math.Min(Board.Board.Cols - 1, target.Col + 1); c++)
+                {
+                    var tile = board[r, c];
+                    if (tile != null && !tile.IsEmpty)
+                        affected.Add(new GridPosition(r, c));
+                }
+            }
+            return affected;
         }
     }
 }
