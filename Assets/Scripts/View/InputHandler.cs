@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Matchmancer.Core;
 
 namespace Matchmancer.View
 {
     /// <summary>
     /// Handles click/touch input for tile selection and swap.
+    /// Uses the new Input System (Pointer device) for unified
+    /// mouse + touch handling.
     /// </summary>
     public class InputHandler : MonoBehaviour
     {
@@ -23,25 +26,18 @@ namespace Matchmancer.View
         {
             if (_controller == null || _controller.IsBusy) return;
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                HandleClick(Input.mousePosition);
-            }
+            var pointer = Pointer.current;
+            if (pointer == null) return;
 
-            // Touch support
-            if (Input.touchCount > 0)
+            if (pointer.press.wasPressedThisFrame)
             {
-                var touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began)
-                {
-                    HandleClick(touch.position);
-                }
+                HandleClick(pointer.position.ReadValue());
             }
         }
 
-        private void HandleClick(Vector3 screenPos)
+        private void HandleClick(Vector2 screenPos)
         {
-            var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+            var worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f));
             worldPos.z = 0;
             var gridPos = _boardView.WorldToGrid(worldPos);
 
@@ -78,8 +74,6 @@ namespace Matchmancer.View
 
         private void HighlightTile(GridPosition pos, bool highlight)
         {
-            // Access the TileView through BoardView's grid-to-world and find the object
-            // For MVP, use a simple approach via the board view's tile array
             var tileViews = _boardView.GetComponentsInChildren<TileView>();
             foreach (var tv in tileViews)
             {
