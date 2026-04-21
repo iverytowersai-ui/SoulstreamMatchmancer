@@ -268,5 +268,108 @@ namespace Matchmancer.Tests
         {
             Assert.AreEqual(0f, CombatFormula.CalculateArmorDamage(_tuning, 2), 0.0001f);
         }
+
+        // ------------------------------------------------------------------
+        // Fairness (distinctiveness guideline #2)
+        // Player must feel lucky ~3× more often than the enemy.
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void GetCritChance_Player_UsesFullChance()
+        {
+            // base 0.05 + 10 luck * 0.005 = 0.10 — no nerf.
+            Assert.AreEqual(
+                0.10f,
+                CombatFormula.GetCritChance(_tuning, 10f, CombatSide.Player),
+                0.0001f);
+        }
+
+        [Test]
+        public void GetCritChance_Enemy_AppliesCritMultiplier()
+        {
+            // Raw chance = 0.10, default enemy multiplier = 0.33, so 0.033.
+            _tuning.EnemyCritMultiplier = 0.33f;
+            Assert.AreEqual(
+                0.033f,
+                CombatFormula.GetCritChance(_tuning, 10f, CombatSide.Enemy),
+                0.0001f);
+        }
+
+        [Test]
+        public void GetCritChance_Fairness_RatioIsConstantAcrossLuck()
+        {
+            // The asymmetry should hold across luck levels — not just at baseline.
+            // If player/enemy ratio drifts with luck, the fairness rule is broken.
+            _tuning.EnemyCritMultiplier = 0.33f;
+
+            for (float luck = 0f; luck <= 200f; luck += 25f)
+            {
+                float player = CombatFormula.GetCritChance(_tuning, luck, CombatSide.Player);
+                float enemy  = CombatFormula.GetCritChance(_tuning, luck, CombatSide.Enemy);
+                // Skip the clamp zone where player crit saturates at 1.0.
+                if (player >= 1.0f) continue;
+                Assert.AreEqual(player * 0.33f, enemy, 0.0001f,
+                    $"Fairness ratio broke at luck={luck}");
+            }
+        }
+
+        [Test]
+        public void GetCritChance_EnemyMultiplierZero_NeverCrits()
+        {
+            _tuning.EnemyCritMultiplier = 0f;
+            Assert.AreEqual(
+                0f,
+                CombatFormula.GetCritChance(_tuning, 9999f, CombatSide.Enemy),
+                0.0001f);
+        }
+
+        [Test]
+        public void GetCritChance_EnemyMultiplierOne_IsSymmetric()
+        {
+            // With multiplier 1.0 we fall back to symmetric combat.
+            _tuning.EnemyCritMultiplier = 1.0f;
+            float player = CombatFormula.GetCritChance(_tuning, 20f, CombatSide.Player);
+            float enemy  = CombatFormula.GetCritChance(_tuning, 20f, CombatSide.Enemy);
+            Assert.AreEqual(player, enemy, 0.0001f);
+        }
+
+        [Test]
+        public void RollCrit_Enemy_CritsLessOftenThanPlayer_Statistically()
+        {
+            // Statistical check: over many rolls the enemy should crit roughly
+            // EnemyCritMultiplier × as often as the player.
+            _tuning.BaseCritChance     = 0.30f;   // meaty base so signal is strong
+            _tuning.LuckToCritRate     = 0f;
+            _tuning.EnemyCritMultiplier = 0.33f;
+
+            var rng = new Random(7);
+            const int trials = 10_000;
+            int playerCrits = 0, enemyCrits = 0;
+            for (int i = 0; i < trials; i++)
+            {
+                if (CombatFormula.RollCrit(_tuning, 0f, rng, CombatSide.Player)) playerCrits++;
+                if (CombatFormula.RollCrit(_tuning, 0f, rng, CombatSide.Enemy))  enemyCrits++;
+            }
+
+            float ratio = (float)playerCrits / Math.Max(1, enemyCrits);
+            // Expected ratio is ~3.03; allow a generous 2.5–3.5 window for noise.
+            Assert.That(ratio, Is.InRange(2.5f, 3.5f),
+                $"Expected ~3× player advantage; got {ratio:F2} (player={playerCrits}, enemy={enemyCrits})");
+        }
+
+        [Test]
+        public void CalculateDamage_DefaultsToPlayerSide_BackwardCompatible()
+        {
+            // Existing callers that omit `side` must still behave as player rolls.
+            _tuning.BaseCritChance     = 1.0f;
+            _tuning.EnemyCritMultiplier = 0.33f;
+
+            var result = CombatFormula.CalculateDamage(
+                _tuning, matchSize: 3, characterAttack: 10f,
+                comboCount: 0, luck: 0f, enemyDefense: 0f, rng: new Random(0));
+
+            // Player forces crit → damage should include crit multiplier.
+            Assert.IsTrue(result.IsCrit);
+        }
     }
 }
