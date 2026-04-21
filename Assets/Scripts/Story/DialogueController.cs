@@ -30,7 +30,7 @@ namespace Matchmancer.Story
         private void OnEnable()
         {
             if (_screenNavigatorController == null)
-                _screenNavigatorController = FindObjectOfType<ScreenNavigatorController>();
+                _screenNavigatorController = FindAnyObjectByType<ScreenNavigatorController>();
             if (_screenNavigator == null && _screenNavigatorController != null)
                 _screenNavigator = _screenNavigatorController.Navigator;
         }

@@ -65,8 +65,8 @@ namespace Matchmancer.Core
         private void Awake()
         {
             if (!screenNav)         screenNav         = GetComponent<ScreenNavigatorController>();
-            if (!battleTurnLoop)    battleTurnLoop    = FindObjectOfType<BattleTurnLoop>();
-            if (!progressionManager) progressionManager = FindObjectOfType<LevelProgressionManager>();
+            if (!battleTurnLoop)    battleTurnLoop    = FindAnyObjectByType<BattleTurnLoop>();
+            if (!progressionManager) progressionManager = FindAnyObjectByType<LevelProgressionManager>();
 
             _selectedCharacter = defaultCharacter;
         }
