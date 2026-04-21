@@ -1,13 +1,10 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Matchmancer.Core;
 
 namespace Matchmancer.View
 {
     /// <summary>
     /// Handles click/touch input for tile selection and swap.
-    /// Uses the new Input System (Pointer device) for unified
-    /// mouse + touch handling.
     /// </summary>
     public class InputHandler : MonoBehaviour
     {
@@ -26,18 +23,25 @@ namespace Matchmancer.View
         {
             if (_controller == null || _controller.IsBusy) return;
 
-            var pointer = Pointer.current;
-            if (pointer == null) return;
-
-            if (pointer.press.wasPressedThisFrame)
+            if (Input.GetMouseButtonDown(0))
             {
-                HandleClick(pointer.position.ReadValue());
+                HandleClick(Input.mousePosition);
+            }
+
+            // Touch support
+            if (Input.touchCount > 0)
+            {
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    HandleClick(touch.position);
+                }
             }
         }
 
-        private void HandleClick(Vector2 screenPos)
+        private void HandleClick(Vector3 screenPos)
         {
-            var worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f));
+            var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
             worldPos.z = 0;
             var gridPos = _boardView.WorldToGrid(worldPos);
 

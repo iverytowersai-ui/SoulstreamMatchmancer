@@ -1,7 +1,7 @@
 {
     "name": "Matchmancer.Runtime",
     "rootNamespace": "Matchmancer",
-    "references": ["Unity.TextMeshPro", "Unity.InputSystem"],
+    "references": ["Unity.TextMeshPro"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
