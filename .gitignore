@@ -26,3 +26,9 @@ sysinfo.txt
 # Local bootstrap patches (not part of the project)
 unity-bootstrap.patch
 unity-bootstrap.patch.save
+
+# Large binary files — keep out of git
+*.mp4
+*.zip
+*.rar
+*.7z

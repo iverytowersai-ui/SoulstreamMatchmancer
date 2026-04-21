@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S3_L04
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '3-4: Hard Rock'
+  stageIndex: 3
+  levelIndex: 4
+  globalIndex: 24
+  enemy: {fileID: 11400000, guid: 89ef4962a51114611a588bf2d47f9c47, type: 2}
+  totalMoves: 24
+  meterCapacity: 100
+  oneStar: 2400
+  twoStar: 4600
+  threeStar: 7000
+  fourStar: 9600
+  fiveStar: 13000
+  objective:
+    type: 1
+    targetScore: 3
+    targetStoneClears: 3
+    surviveTurns: 0
+  stoneBlocks:
+  - row: 2
+    col: 1
+    hp: 2
+  - row: 2
+    col: 5
+    hp: 2
+  - row: 3
+    col: 3
+    hp: 2
+  goldReward: 45
+  xpReward: 60
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: HP-2 stones require two adjacent matches to clear. Teach multi-hit
+    stone breaking.

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S3_L01
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '3-1: Rubble Entry'
+  stageIndex: 3
+  levelIndex: 1
+  globalIndex: 21
+  enemy: {fileID: 11400000, guid: 89ef4962a51114611a588bf2d47f9c47, type: 2}
+  totalMoves: 26
+  meterCapacity: 100
+  oneStar: 1800
+  twoStar: 3400
+  threeStar: 5200
+  fourStar: 7200
+  fiveStar: 10000
+  objective:
+    type: 0
+    targetScore: 5200
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks:
+  - row: 0
+    col: 0
+    hp: 1
+  - row: 0
+    col: 6
+    hp: 1
+  goldReward: 35
+  xpReward: 48
+  preStorySceneId: stage3_intro
+  postStorySceneId: 
+  designNotes: Intro to stone blocks. Two stones in corners teach the mechanic without
+    punishing. Match around them.

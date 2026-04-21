@@ -58,6 +58,12 @@ namespace Matchmancer.Combat
         public int   poisonDuration      = 3;
         public float vulnerabilityMult   = 1.25f;
 
+        [Header("Fairness (distinctiveness guideline #2)")]
+        [Tooltip("Enemy final crit chance is multiplied by this. 0.33 = enemy crits ~1/3 " +
+                 "as often as the player, making the player feel lucky ~3× more often. " +
+                 "Set 1.0 for symmetric combat, 0.0 to disable enemy crits entirely.")]
+        [Range(0f, 1f)] public float enemyCritMultiplier = 0.33f;
+
         /// <summary>
         /// Project every Inspector field into a pure-C# <see cref="CombatTuning"/>
         /// so the formula layer never has to reference UnityEngine.
@@ -88,6 +94,8 @@ namespace Matchmancer.Combat
                 PoisonDamagePerTurn  = poisonDamagePerTurn,
                 PoisonDuration       = poisonDuration,
                 VulnerabilityMult    = vulnerabilityMult,
+
+                EnemyCritMultiplier  = enemyCritMultiplier,
             };
         }
     }

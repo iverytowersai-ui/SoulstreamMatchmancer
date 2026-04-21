@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S2_L08
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '2-8: Glyph Maze'
+  stageIndex: 2
+  levelIndex: 8
+  globalIndex: 18
+  enemy: {fileID: 11400000, guid: df4dfe43fc4f64a5f9c5c1ad4fffde74, type: 2}
+  totalMoves: 23
+  meterCapacity: 100
+  oneStar: 2600
+  twoStar: 5000
+  threeStar: 7600
+  fourStar: 10600
+  fiveStar: 14500
+  objective:
+    type: 0
+    targetScore: 7600
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks: []
+  goldReward: 50
+  xpReward: 68
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: Wardwright with tighter budget. Every move must count. Sigils are
+    the only way to burst through armor fast enough.

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S3_L07
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '3-7: Deep Shaft'
+  stageIndex: 3
+  levelIndex: 7
+  globalIndex: 27
+  enemy: {fileID: 11400000, guid: 68bb3df5f6a07448694685f4227d760e, type: 2}
+  totalMoves: 23
+  meterCapacity: 100
+  oneStar: 3000
+  twoStar: 5800
+  threeStar: 8800
+  fourStar: 12000
+  fiveStar: 16000
+  objective:
+    type: 0
+    targetScore: 8800
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks:
+  - row: 0
+    col: 1
+    hp: 2
+  - row: 1
+    col: 1
+    hp: 2
+  - row: 0
+    col: 5
+    hp: 2
+  - row: 1
+    col: 5
+    hp: 2
+  goldReward: 55
+  xpReward: 75
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: Tall stone columns. Limited horizontal space forces creative vertical
+    play and sigil use.

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2f987630876457ca3f0b63264fa99c, type: 3}
+  m_Name: Stage_03
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.StageData
+  stageName: 'Stage 3: The Quarry of Stones'
+  stageIndex: 3
+  stageArt: {fileID: 0}
+  stageColor: {r: 0.58, g: 0.45, b: 0.32, a: 1}
+  stageSummary: The deeper galleries where raw Soulstream ore is mined. Stone blocks
+    choke the board, and the workers here fight to protect what they've unearthed.
+  levels:
+  - {fileID: 11400000, guid: c7d3fe7f545144ab5b1c9acc3a7dbd79, type: 2}
+  - {fileID: 11400000, guid: d60c9ebcfabcd4ff482597d8e7b2b46b, type: 2}
+  - {fileID: 11400000, guid: 375ce314c9f1c4f68bcf5ec51209de50, type: 2}
+  - {fileID: 11400000, guid: 33919f7eb81474bab8d2d6971ae5b53d, type: 2}
+  - {fileID: 11400000, guid: 42d4730a008ef433283fff03e6d967f6, type: 2}
+  - {fileID: 11400000, guid: 4f667e72eb31d49c48ba74664e4d2f0c, type: 2}
+  - {fileID: 11400000, guid: 6e29509603d26444a93b39dca37a310b, type: 2}
+  - {fileID: 11400000, guid: 937c813f45f344b0097826e20f8166f4, type: 2}
+  - {fileID: 11400000, guid: 0ebeddb22cb284c93a187c33d195e5a3, type: 2}
+  - {fileID: 11400000, guid: 4305339157c644c78b8411596ac1dfdc, type: 2}
+  levelsRequiredToUnlock: 7
+  bossLevelIndex: 10
+  stageIntroSceneId: stage3_intro
+  stageOutroSceneId: stage3_outro
+  stageCompletionGoldBonus: 250

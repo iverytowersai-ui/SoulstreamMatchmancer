@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fc96030536024e4fa5201e51f6fb70c, type: 3}
+  m_Name: Enemy_Stage2_Boss_Mirael
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Enemy.EnemyData
+  displayName: Mirael, the Sigil Broker
+  loreDescription: "She reads the Soulstream like a ledger. Every sigil in the Bazaar
+    bears her mark \u2014 cross her and the whole gallery turns hostile."
+  portrait: {fileID: 0}
+  maxHp: 320
+  defense: 4
+  maxArmor: 50
+  baseAttackPower: 16
+  attacksPerTurn: 2

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S3_L08
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '3-8: Fault Line'
+  stageIndex: 3
+  levelIndex: 8
+  globalIndex: 28
+  enemy: {fileID: 11400000, guid: 68bb3df5f6a07448694685f4227d760e, type: 2}
+  totalMoves: 22
+  meterCapacity: 100
+  oneStar: 3200
+  twoStar: 6200
+  threeStar: 9400
+  fourStar: 12800
+  fiveStar: 17000
+  objective:
+    type: 0
+    targetScore: 9400
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks:
+  - row: 1
+    col: 1
+    hp: 2
+  - row: 2
+    col: 2
+    hp: 2
+  - row: 3
+    col: 3
+    hp: 3
+  - row: 4
+    col: 4
+    hp: 2
+  - row: 5
+    col: 5
+    hp: 2
+  goldReward: 60
+  xpReward: 82
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: Diagonal stone barrier. Tests spatial planning. Every match must be
+    intentional.

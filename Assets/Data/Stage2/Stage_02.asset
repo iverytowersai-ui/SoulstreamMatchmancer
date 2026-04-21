@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2f987630876457ca3f0b63264fa99c, type: 3}
+  m_Name: Stage_02
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.StageData
+  stageName: 'Stage 2: The Sigil Bazaar'
+  stageIndex: 2
+  stageArt: {fileID: 0}
+  stageColor: {r: 0.28, g: 0.55, b: 0.68, a: 1}
+  stageSummary: "Beyond the Threshold lies the Bazaar \u2014 a labyrinth of sigil
+    merchants, rogue conjurers, and warded corridors. Master the sigils or be consumed
+    by them."
+  levels:
+  - {fileID: 11400000, guid: 2a82dbae434a44994bd273924a39c6f1, type: 2}
+  - {fileID: 11400000, guid: 75dbf103f2e73492fb4c5d26283fac0e, type: 2}
+  - {fileID: 11400000, guid: acc6b91da36db4bd6a0d3a6781f37493, type: 2}
+  - {fileID: 11400000, guid: feebdf20960834d2ba28405b46547059, type: 2}
+  - {fileID: 11400000, guid: 9c2fb7aa34c284cc896ff11ab5a5fc3d, type: 2}
+  - {fileID: 11400000, guid: 1efa11d011dcb42a88944b82ef7f3167, type: 2}
+  - {fileID: 11400000, guid: 49482f2b86dbc4e19be17f0364dcf48e, type: 2}
+  - {fileID: 11400000, guid: 3d9844c1b3b4d4fb9b068603c9b161c6, type: 2}
+  - {fileID: 11400000, guid: 2ba294f4124d64277abf6c762fd8e8b4, type: 2}
+  - {fileID: 11400000, guid: 5e28ab4660e0940c29ca7206fba3153e, type: 2}
+  levelsRequiredToUnlock: 7
+  bossLevelIndex: 10
+  stageIntroSceneId: stage2_intro
+  stageOutroSceneId: stage2_outro
+  stageCompletionGoldBonus: 200

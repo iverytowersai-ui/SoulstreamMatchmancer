@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S2_L02
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '2-2: Sigil Spark'
+  stageIndex: 2
+  levelIndex: 2
+  globalIndex: 12
+  enemy: {fileID: 11400000, guid: b2edc847e88ce4a269f1f5d68a9d78c5, type: 2}
+  totalMoves: 27
+  meterCapacity: 100
+  oneStar: 1400
+  twoStar: 2800
+  threeStar: 4400
+  fourStar: 6200
+  fiveStar: 8500
+  objective:
+    type: 0
+    targetScore: 4400
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks: []
+  goldReward: 28
+  xpReward: 38
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: 'Teach Line Sigils: a 4-match creates a line clear. Encourage horizontal/vertical
+    planning.'

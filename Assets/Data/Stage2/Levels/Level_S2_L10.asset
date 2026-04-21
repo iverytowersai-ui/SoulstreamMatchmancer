@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S2_L10
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '2-10: Mirael, the Sigil Broker'
+  stageIndex: 2
+  levelIndex: 10
+  globalIndex: 20
+  enemy: {fileID: 11400000, guid: 2c0a00270653f45c981c03b1f96cd444, type: 2}
+  totalMoves: 22
+  meterCapacity: 100
+  oneStar: 3500
+  twoStar: 6000
+  threeStar: 9000
+  fourStar: 12500
+  fiveStar: 17000
+  objective:
+    type: 0
+    targetScore: 9000
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks: []
+  goldReward: 150
+  xpReward: 200
+  preStorySceneId: 
+  postStorySceneId: stage2_outro
+  designNotes: BOSS. Dual-attack, heavy armor, high HP. Demands sustained sigil chains
+    and smart defensive play. ~3x rewards.

@@ -45,6 +45,18 @@ namespace Matchmancer.Combat
         public int   PoisonDuration      { get; set; } = 3;
         public float VulnerabilityMult   { get; set; } = 1.25f;
 
+        // === Fairness (distinctiveness guideline #2) ===
+        /// <summary>
+        /// Multiplier applied to the enemy's final crit chance. Default 0.33 means
+        /// the enemy crits at roughly one-third the rate the player does, making the
+        /// player feel "lucky" about 3× as often as the AI. This is a shipped Puzzle
+        /// Quest finding — symmetric luck feels rigged to players even when it isn't.
+        /// Only applied when <see cref="CombatSide.Enemy"/> is passed to
+        /// <see cref="CombatFormula.GetCritChance"/> / <see cref="CombatFormula.RollCrit"/>.
+        /// Set to 1.0 to make combat symmetric; 0.0 to make the enemy never crit.
+        /// </summary>
+        public float EnemyCritMultiplier { get; set; } = 0.33f;
+
         /// <summary>Factory: returns a fresh tuning with all defaults.</summary>
         public static CombatTuning Default() => new CombatTuning();
     }

@@ -3,6 +3,19 @@ using System;
 namespace Matchmancer.Combat
 {
     /// <summary>
+    /// Which side of the battle is rolling. Used by the fairness system
+    /// (distinctiveness guideline #2) to apply asymmetric crit multipliers.
+    /// Player rolls at full chance; Enemy rolls are scaled by
+    /// <see cref="CombatTuning.EnemyCritMultiplier"/> (default 0.33) so the
+    /// player feels lucky ~3× more often than the AI.
+    /// </summary>
+    public enum CombatSide
+    {
+        Player,
+        Enemy,
+    }
+
+    /// <summary>
     /// Stateless combat math. All formulas live here, nowhere else.
     /// Pure C# — no UnityEngine — so tests can call it with a seeded
     /// <see cref="System.Random"/> for deterministic crit outcomes.
@@ -15,6 +28,13 @@ namespace Matchmancer.Combat
     ///               × ComboMultiplier
     ///               × CritMultiplier
     ///               - EnemyDefense
+    ///
+    /// Fairness rule (distinctiveness guideline #2):
+    ///   Crit chance is asymmetric. Player rolls at the full computed chance.
+    ///   Enemy rolls are scaled by <see cref="CombatTuning.EnemyCritMultiplier"/>
+    ///   (default 0.33) so the player feels lucky ~3× more often than the AI.
+    ///   Pass <see cref="CombatSide.Enemy"/> to <see cref="GetCritChance(CombatTuning, float, CombatSide)"/>
+    ///   or <see cref="RollCrit(CombatTuning, float, Random, CombatSide)"/> to apply the nerf.
     /// </summary>
     public static class CombatFormula
     {
@@ -23,6 +43,8 @@ namespace Matchmancer.Combat
         /// <summary>
         /// Calculate final damage from a Damage (SoulstreamShard) match.
         /// Returns a tuple so callers know whether the hit crit.
+        /// Defaults to <see cref="CombatSide.Player"/> for backward compatibility —
+        /// pass <see cref="CombatSide.Enemy"/> for asymmetric fairness.
         /// </summary>
         /// <param name="tuning">Tuning constants.</param>
         /// <param name="matchSize">Number of tiles in the match (≥3).</param>
@@ -31,6 +53,7 @@ namespace Matchmancer.Combat
         /// <param name="luck">Character luck stat — raises crit chance.</param>
         /// <param name="enemyDefense">Flat damage reduction applied at the end.</param>
         /// <param name="rng">Random source — inject a seeded <c>System.Random</c> in tests.</param>
+        /// <param name="side">Which side is rolling. Enemy rolls get nerfed by <see cref="CombatTuning.EnemyCritMultiplier"/>.</param>
         public static DamageResult CalculateDamage(
             CombatTuning tuning,
             int          matchSize,
@@ -38,7 +61,8 @@ namespace Matchmancer.Combat
             int          comboCount,
             float        luck,
             float        enemyDefense,
-            Random       rng)
+            Random       rng,
+            CombatSide   side = CombatSide.Player)
         {
             if (tuning == null) throw new ArgumentNullException(nameof(tuning));
             if (rng    == null) throw new ArgumentNullException(nameof(rng));
@@ -49,7 +73,7 @@ namespace Matchmancer.Combat
             float charMod   = characterAttack / 10f;
             float comboMult = GetComboMultiplier(tuning, comboCount);
 
-            bool  isCrit    = RollCrit(tuning, luck, rng);
+            bool  isCrit    = RollCrit(tuning, luck, rng, side);
             float critMult  = isCrit ? tuning.CritDamageMultiplier : 1f;
 
             float raw   = baseValue * sizeMult * charMod * comboMult * critMult;
@@ -111,10 +135,14 @@ namespace Matchmancer.Combat
 
         /// <summary>
         /// Final crit chance (clamped 0–1) for the given luck stat.
+        /// Defaults to <see cref="CombatSide.Player"/>. Pass <see cref="CombatSide.Enemy"/>
+        /// to apply the fairness nerf (<see cref="CombatTuning.EnemyCritMultiplier"/>).
         /// </summary>
-        public static float GetCritChance(CombatTuning tuning, float luck)
+        public static float GetCritChance(CombatTuning tuning, float luck, CombatSide side = CombatSide.Player)
         {
             float chance = tuning.BaseCritChance + luck * tuning.LuckToCritRate;
+            if (side == CombatSide.Enemy)
+                chance *= tuning.EnemyCritMultiplier;
             if (chance < 0f) return 0f;
             if (chance > 1f) return 1f;
             return chance;
@@ -122,10 +150,16 @@ namespace Matchmancer.Combat
 
         /// <summary>
         /// Rolls a crit against <paramref name="rng"/>. Test-friendly — inject a seeded Random.
+        /// Defaults to <see cref="CombatSide.Player"/>. Pass <see cref="CombatSide.Enemy"/>
+        /// to apply the fairness nerf.
         /// </summary>
-        public static bool RollCrit(CombatTuning tuning, float luck, Random rng)
+        public static bool RollCrit(
+            CombatTuning tuning,
+            float        luck,
+            Random       rng,
+            CombatSide   side = CombatSide.Player)
         {
-            return rng.NextDouble() < GetCritChance(tuning, luck);
+            return rng.NextDouble() < GetCritChance(tuning, luck, side);
         }
 
         #endregion

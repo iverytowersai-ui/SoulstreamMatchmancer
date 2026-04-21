@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71f79e7bba99408a974809eb7e8027e, type: 3}
+  m_Name: Level_S2_L07
+  m_EditorClassIdentifier: Matchmancer.Runtime::Matchmancer.Progression.LevelData
+  displayName: '2-7: Chain Reaction'
+  stageIndex: 2
+  levelIndex: 7
+  globalIndex: 17
+  enemy: {fileID: 11400000, guid: b2edc847e88ce4a269f1f5d68a9d78c5, type: 2}
+  totalMoves: 24
+  meterCapacity: 100
+  oneStar: 2400
+  twoStar: 4600
+  threeStar: 7000
+  fourStar: 9800
+  fiveStar: 13500
+  objective:
+    type: 0
+    targetScore: 7000
+    targetStoneClears: 0
+    surviveTurns: 0
+  stoneBlocks: []
+  goldReward: 45
+  xpReward: 62
+  preStorySceneId: 
+  postStorySceneId: 
+  designNotes: Combo focus level. Sigil + cascade chains are the path to high scores.
+    Reward multi-step setups.
