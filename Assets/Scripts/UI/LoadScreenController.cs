@@ -17,7 +17,7 @@ namespace Matchmancer.UI
 
         [Header("Config")]
         [Tooltip("Skip the Login screen and go straight to MainHub in MVP.")]
-        [SerializeField] private bool skipLogin = true;
+        [SerializeField] private bool skipLogin = false;
 
         private bool _doneOnce;
 
