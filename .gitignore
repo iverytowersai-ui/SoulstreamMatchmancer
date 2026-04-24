@@ -32,3 +32,6 @@ unity-bootstrap.patch.save
 *.zip
 *.rar
 *.7z
+
+# Allow small in-game video assets
+!Assets/Art/Backgrounds/LoginAnimation.mp4
