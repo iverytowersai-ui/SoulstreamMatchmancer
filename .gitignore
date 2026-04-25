@@ -23,6 +23,18 @@ sysinfo.txt
 *.unitypackage
 *.app
 
+# Unity generated (nested — e.g. Matchmancer/, Match3Mobile/ subprojects)
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+
 # Local bootstrap patches (not part of the project)
 unity-bootstrap.patch
 unity-bootstrap.patch.save
+
+# Secrets — never commit API keys / config with credentials
+**/claude_config.json
